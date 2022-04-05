@@ -1,0 +1,19 @@
+{
+  "name": "mimega",
+  "version": "1.0.0",
+  "description": "Meme related web project",
+  "main": "./src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sirmov/Mimega.git"
+  },
+  "author": "Nikola Sirmov",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Sirmov/Mimega/issues"
+  },
+  "homepage": "https://github.com/Sirmov/Mimega#readme"
+}
