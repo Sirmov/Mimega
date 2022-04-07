@@ -9,6 +9,7 @@ module.exports = merge(common, {
         filename: '[name].bundle.js',
         path: path.resolve(__dirname, 'dist')
     },
+    devtool: 'eval-source-map',
     plugins: [
         new HtmlWebpackPlugin({
             template: './index.html'
