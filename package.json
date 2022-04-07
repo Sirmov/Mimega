@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/Sirmov/Mimega#readme",
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.1.1",
     "bulma": "^0.9.3",
     "lit-html": "^2.2.2",
     "page": "^1.11.6",
