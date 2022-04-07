@@ -5,6 +5,9 @@ module.exports = {
         vendor: './src/vendor.js',
         main: './src/app.js'
     },
+    devServer: {
+        historyApiFallback: true
+    },
     module: {
         rules: [
             {

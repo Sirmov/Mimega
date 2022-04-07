@@ -3,12 +3,12 @@ import { html } from 'lit-html';
 export const navigationTemplate = () =>
     html`<nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
-            <a class="navbar-item" href="https://bulma.io">
-                <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28" />
-            </a>
+            <div class="navbar-item">
+                <p class="title is-4"><strong>Mimega</strong></p>
+            </div>
         </div>
 
-        <div id="navbarBasicExample" class="navbar-menu">
+        <div class="navbar-menu">
             <div class="navbar-start">
                 <a class="navbar-item">Home</a>
                 <a class="navbar-item">Documentation</a>
@@ -17,8 +17,8 @@ export const navigationTemplate = () =>
             <div class="navbar-end">
                 <div class="navbar-item">
                     <div class="buttons">
-                        <a class="button is-primary"><strong>Sign up</strong></a>
-                        <a class="button is-light">Log in</a>
+                        <a class="button is-primary" href="/sign-up"><strong>Sign up</strong></a>
+                        <a class="button is-light" href="/login">Log in</a>
                     </div>
                 </div>
             </div>
