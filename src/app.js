@@ -27,11 +27,13 @@ import page from 'page';
 // Import view controllers
 import { landingController } from './controllers/landingController';
 import { loginController } from './controllers/loginController';
+import { registerController } from './controllers/registerController';
 
 // Register routes
 page(dependenciesMiddleware({ app, auth }));
 page(renderMiddleware);
 page('/', landingController);
 page('/login', loginController);
+page('/sign-up', registerController);
 
 page.start();
