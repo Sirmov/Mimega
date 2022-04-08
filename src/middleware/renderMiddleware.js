@@ -1,12 +1,15 @@
 // Attach render function to context
 
 import { render } from 'lit-html';
+import { getUserDisplayName } from '../services/authenticationService';
+import { createEventHandler } from '../utils/decorators';
+import { logoutAction } from '../actions/logoutAction';
 
 // Import layout skeleton
 import { layoutTemplate } from '../views/skeleton/layoutView';
 import { navigationTemplate } from '../views/skeleton/navigationView';
 import { footerTemplate } from '../views/skeleton/footerView';
-import { getUserDisplayName } from '../services/authenticationService';
+
 
 // Render layout on initial load
 const rootElement = document.body;
@@ -19,7 +22,7 @@ const footerContainer = rootElement.querySelector('footer');
 
 function ctxRender(ctx) {
     return function (templateResult) {
-        render(navigationTemplate(getUserDisplayName(ctx.auth)), navigationContainer);
+        render(navigationTemplate(getUserDisplayName(ctx.auth), createEventHandler(ctx, logoutAction)), navigationContainer);
         render(footerTemplate(), footerContainer);
         return render(templateResult, contentContainer);
     };

@@ -1,6 +1,6 @@
 import { html } from 'lit-html';
 
-export const navigationTemplate = (displayName) =>
+export const navigationTemplate = (displayName, onLogout) =>
     html`<nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <div class="navbar-item">
@@ -20,7 +20,7 @@ export const navigationTemplate = (displayName) =>
                               <p class="content">Hello, ${displayName}</p>
                           </div>
                           <div class="navbar-item">
-                              <a class="button is-light" href="javascript:void(0)">Logout</a>
+                              <a class="button is-light" href="javascript:void(0)" @click=${onLogout}>Logout</a>
                           </div>`
                     : html`<div class="navbar-item">
                           <div class="buttons">
