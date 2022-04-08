@@ -1,7 +1,7 @@
 // Application entry point
 
 import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 // Firebase web app configuration
 const firebaseConfig = {
@@ -15,7 +15,8 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const auth = getAuth();
+const auth = getAuth(app);
+onAuthStateChanged(auth, (user) => page.redirect(page.current));
 
 // Import middleware
 import { renderMiddleware } from './middleware/renderMiddleware';
