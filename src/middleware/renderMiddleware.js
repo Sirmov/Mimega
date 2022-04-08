@@ -6,6 +6,7 @@ import { render } from 'lit-html';
 import { layoutTemplate } from '../views/skeleton/layoutView';
 import { navigationTemplate } from '../views/skeleton/navigationView';
 import { footerTemplate } from '../views/skeleton/footerView';
+import { getUserDisplayName } from '../services/authenticationService';
 
 // Render layout on initial load
 const rootElement = document.body;
@@ -16,16 +17,16 @@ const navigationContainer = rootElement.querySelector('header');
 const contentContainer = rootElement.querySelector('main');
 const footerContainer = rootElement.querySelector('footer');
 
-function ctxRender() {
+function ctxRender(ctx) {
     return function (templateResult) {
-        render(navigationTemplate(), navigationContainer);
+        render(navigationTemplate(getUserDisplayName(ctx.auth)), navigationContainer);
         render(footerTemplate(), footerContainer);
         return render(templateResult, contentContainer);
     };
 }
 
 export function renderMiddleware(ctx, next) {
-    ctx.render = ctxRender();
+    ctx.render = ctxRender(ctx);
 
     next();
 }
