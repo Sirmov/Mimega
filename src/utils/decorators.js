@@ -1,3 +1,5 @@
+// Curring functions used to make handlers
+
 export function createSubmitHandler(ctx, handler, allowedData) {
     return function (event) {
         event.preventDefault();
