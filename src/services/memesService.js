@@ -1,4 +1,15 @@
-import { collection, doc, addDoc, getDoc, getDocs, deleteDoc, updateDoc, serverTimestamp, query, orderBy } from 'firebase/firestore';
+import {
+    collection,
+    doc,
+    addDoc,
+    getDoc,
+    getDocs,
+    deleteDoc,
+    updateDoc,
+    serverTimestamp,
+    query,
+    orderBy
+} from 'firebase/firestore';
 import { getUserUid } from './authenticationService';
 
 const collectionPath = 'memes';
@@ -7,7 +18,7 @@ const docRef = (db, docId) => doc(db, collectionPath, docId);
 
 const queries = {
     recent: (db) => query(collectionRef(db), orderBy('createdAt', 'desc'))
-}
+};
 
 export async function createMeme(db, meme) {
     const doc = {
@@ -15,20 +26,20 @@ export async function createMeme(db, meme) {
         createdAt: serverTimestamp(),
         updatedAt: createdAt,
         ownerId: getUserUid()
-    }
+    };
 
     return addDoc(collectionRef(db), doc);
 }
 
 export async function readAllMemes(db) {
-    const docs = await getDocs(collectionRef(db));
-    return docs.forEach((doc) => {
+    const snapshot = await getDocs(collectionRef(db));
+    return snapshot.docs.map((doc) => {
         return { ...doc.data(), id: doc.id };
     });
 }
 
 export async function readMeme(db, memeId) {
-    const doc = await getDoc(docRef(db, memeId)); 
+    const doc = await getDoc(docRef(db, memeId));
     return { ...doc.data(), id: doc.id };
 }
 
@@ -36,7 +47,7 @@ export async function updateMeme(db, meme, memeId) {
     const doc = {
         ...meme,
         updatedAt: serverTimestamp()
-    }
+    };
 
     return updateDoc(docRef(db, memeId), doc);
 }

@@ -31,12 +31,14 @@ import page from 'page';
 import { landingController } from './controllers/landingController';
 import { loginController } from './controllers/loginController';
 import { registerController } from './controllers/registerController';
+import { memesController } from './controllers/memesController';
 
 // Register routes
-page(dependenciesMiddleware({ app, auth }));
+page(dependenciesMiddleware({ app, auth, db }));
 page(renderMiddleware);
 page('/', landingController);
 page('/login', loginController);
 page('/sign-up', registerController);
+page('/memes', memesController);
 
 page.start();
