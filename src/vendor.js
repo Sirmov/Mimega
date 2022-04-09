@@ -1,2 +1,2 @@
 import 'bulma';
-import '@fortawesome/fontawesome-free/js/all';
+import('@fortawesome/fontawesome-free/js/all');
