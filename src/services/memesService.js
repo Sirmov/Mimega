@@ -20,12 +20,14 @@ const queries = {
     recent: (db) => query(collectionRef(db), orderBy('createdAt', 'desc'))
 };
 
-export async function createMeme(db, meme) {
+export async function createMeme(db, auth, meme) {
+    const timestamp = serverTimestamp();
+
     const doc = {
         ...meme,
-        createdAt: serverTimestamp(),
-        updatedAt: createdAt,
-        ownerId: getUserUid()
+        createdAt: timestamp,
+        updatedAt: timestamp,
+        ownerId: getUserUid(auth)
     };
 
     return addDoc(collectionRef(db), doc);
