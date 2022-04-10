@@ -23,8 +23,7 @@
     "bulma": "^0.9.3",
     "firebase": "^9.6.10",
     "lit-html": "^2.2.2",
-    "page": "^1.11.6",
-    "sass": "^1.49.11"
+    "page": "^1.11.6"
   },
   "devDependencies": {
     "clean-webpack-plugin": "^4.0.0",
@@ -34,6 +33,7 @@
     "html-webpack-plugin": "^5.5.0",
     "mini-css-extract-plugin": "^2.6.0",
     "optimize-css-assets-webpack-plugin": "^6.0.1",
+    "sass": "^1.50.0",
     "sass-loader": "^12.6.0",
     "style-loader": "^3.3.1",
     "webpack": "^5.71.0",
