@@ -55,6 +55,6 @@ async function registerSubmit(ctx, data, event) {
     } else {
         await register(ctx.auth, data.email, data.password, data.username);
         event.target.reset();
-        ctx.page.redirect('/');
+        ctx.page.redirect('/login');
     }
 }
