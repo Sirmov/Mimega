@@ -17,12 +17,12 @@ export const memeCardsTemplate = (memes) =>
         : html`<h1>No memes sorry :(</h1>`}`;
 
 const memeCardTemplate = (meme) =>
-    html`<div class="card">
+    html`<div class="card meme-card">
         <header class="card-header">
             <h1 class="card-header-title title">${meme.title}</h1>
         </header>
         <div class="card-image">
-            <figure class="image is-4by3">
+            <figure class="image is-5by4">
                 <img src=${meme.imageUrl} alt="Meme image" />
             </figure>
         </div>

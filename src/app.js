@@ -1,5 +1,7 @@
 // Application entry point
 
+import '../styles/styles.scss';
+
 import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
