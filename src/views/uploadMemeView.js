@@ -1,7 +1,7 @@
 import { html, nothing } from 'lit-html';
 
-export const uploadMemeTemplate = (createSubmit, validation) =>
-    html`<form @submit=${createSubmit} class="container">
+export const uploadMemeTemplate = (uploadSubmit, validation) =>
+    html`<form @submit=${uploadSubmit} class="container">
         <h1 class="title is-2 mb-6">Upload meme</h1>
         <div class="field">
             <label class="label is-medium" for="title">Title</label>
