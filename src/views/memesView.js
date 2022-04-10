@@ -1,10 +1,11 @@
 import { html, nothing } from 'lit-html';
 import { repeat } from 'lit-html/directives/repeat.js';
 import { until } from 'lit-html/directives/until.js';
+import { spinner } from '../utils/dom';
 
 export const memesTemplate = (memesPromise) =>
     html`<ul class="container">
-        ${until(memesPromise, nothing)}
+        ${until(memesPromise, spinner())}
     </ul>`;
 
 export const memeCardsTemplate = (memes, onDelete) =>
@@ -35,7 +36,8 @@ const memeCardTemplate = (meme, onDelete) =>
         <footer class="card-footer">
             ${meme.isOwner
                 ? html`<a href="/edit-meme/${meme.id}" class="card-footer-item">Edit</a>
-                <a href="javascript:void(0)" data-id=${meme.id} class="card-footer-item" @click=${onDelete}>Delete</a>`
+                      <a href="javascript:void(0)" data-id=${meme.id} class="card-footer-item" @click=${onDelete}
+                          >Delete</a>`
                 : nothing}
             <a href="#" class="card-footer-item">Save</a>
         </footer>
