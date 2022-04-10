@@ -2,6 +2,7 @@ import { html, nothing } from 'lit-html';
 
 export const loginTemplate = (loginSubmit, validation) =>
     html`<form @submit=${loginSubmit} class="container">
+        <h1 class="title is-2 mb-5">Log in</h1>
         <div class="field">
             <label class="label is-medium" for="email">Email</label>
             <div class="control has-icons-left">
