@@ -7,12 +7,12 @@ export const memesTemplate = (memesPromise) =>
         ${until(memesPromise, nothing)}
     </ul>`;
 
-export const memeCardsTemplate = (memes) =>
+export const memeCardsTemplate = (memes, onDelete) =>
     html`${memes.length > 0
         ? html`${repeat(
               memes,
               (meme) => meme.id,
-              (meme, index) => memeCardTemplate(meme)
+              (meme, index) => memeCardTemplate(meme, onDelete)
           )}`
         : html`<h1>No memes sorry :(</h1>`}`;
 
