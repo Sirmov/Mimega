@@ -20,7 +20,7 @@ export const navigationTemplate = (displayName, onLogout) =>
                               <p class="content">Hello, ${displayName}</p>
                           </div>
                           <div class="navbar-item">
-                              <a class="button is-primary" href="/create-meme">Create meme</a>
+                              <a class="button is-primary" href="/create-meme">Upload meme</a>
                           </div>
                           <div class="navbar-item">
                               <a class="button is-light" href="javascript:void(0)" @click=${onLogout}>Logout</a>

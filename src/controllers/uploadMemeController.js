@@ -1,14 +1,14 @@
 import { createMeme } from '../services/memesService.js';
-import { createMemeTemplate } from '../views/createMemeView.js';
+import { uploadMemeTemplate as uploadMemeTemplate } from '../views/uploadMemeView.js';
 import { createSubmitHandler } from '../utils/decorators';
 
 const allowedData = ['title', 'imageUrl', 'author'];
 
-export function createMemeController(ctx, next) {
-    ctx.render(createMemeTemplate(createSubmitHandler(ctx, createSubmit, allowedData)));
+export function uploadMemeController(ctx, next) {
+    ctx.render(uploadMemeTemplate(createSubmitHandler(ctx, uploadSubmit, allowedData)));
 }
 
-async function createSubmit(ctx, data, event) {
+async function uploadSubmit(ctx, data, event) {
     let validation = {};
     allowedData.forEach((d) => (validation[d] = { isValid: true, message: '' }));
 
@@ -40,7 +40,7 @@ async function createSubmit(ctx, data, event) {
     }
 
     if (Object.entries(validation).some(([k, v]) => v.isValid === false)) {
-        ctx.render(createMemeTemplate(createSubmitHandler(ctx, createSubmit, allowedData), validation));
+        ctx.render(uploadMemeTemplate(createSubmitHandler(ctx, uploadSubmit, allowedData), validation));
     } else {
         await createMeme(ctx.db, ctx.auth, data);
         event.target.reset();

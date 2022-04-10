@@ -1,6 +1,6 @@
 import { html, nothing } from 'lit-html';
 
-export const createMemeTemplate = (createSubmit, validation) =>
+export const uploadMemeTemplate = (createSubmit, validation) =>
     html`<form @submit=${createSubmit} class="container">
         <div class="field">
             <label class="label is-medium" for="title">Title</label>
@@ -61,7 +61,7 @@ export const createMemeTemplate = (createSubmit, validation) =>
 
         <div class="field">
             <div class="control">
-                <button class="button is-primary" type="submit">Create meme</button>
+                <button class="button is-primary" type="submit">Upload meme</button>
             </div>
         </div>
     </form>`;

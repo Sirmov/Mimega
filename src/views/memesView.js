@@ -16,7 +16,7 @@ export const memeCardsTemplate = (memes) =>
           )}`
         : html`<h1>No memes sorry :(</h1>`}`;
 
-const memeCardTemplate = (meme) =>
+const memeCardTemplate = (meme, onDelete) =>
     html`<div class="card meme-card">
         <header class="card-header">
             <h1 class="card-header-title title">${meme.title}</h1>
@@ -34,7 +34,8 @@ const memeCardTemplate = (meme) =>
         </div>
         <footer class="card-footer">
             ${meme.isOwner
-                ? html`<a href="/edit-meme/${meme.id}" class="card-footer-item">Edit</a> <a href="javascript:void(0)" class="card-footer-item" @click=>Delete</a>`
+                ? html`<a href="/edit-meme/${meme.id}" class="card-footer-item">Edit</a>
+                <a href="javascript:void(0)" data-id=${meme.id} class="card-footer-item" @click=${onDelete}>Delete</a>`
                 : nothing}
             <a href="#" class="card-footer-item">Save</a>
         </footer>

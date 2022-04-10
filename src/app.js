@@ -34,7 +34,7 @@ import { landingController } from './controllers/landingController';
 import { loginController } from './controllers/loginController';
 import { registerController } from './controllers/registerController';
 import { memesController } from './controllers/memesController';
-import { createMemeController } from './controllers/createMemeController';
+import { uploadMemeController } from './controllers/uploadMemeController';
 
 // Register routes
 page(dependenciesMiddleware({ app, auth, db }));
@@ -43,6 +43,6 @@ page('/', landingController);
 page('/login', loginController);
 page('/sign-up', registerController);
 page('/memes', memesController);
-page('/create-meme', createMemeController);
+page('/create-meme', uploadMemeController);
 
 page.start();
