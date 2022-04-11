@@ -1,6 +1,8 @@
-.meme-card {
-    display: inline-block;
-    width: 28%;
-    height: 28%;
-    margin: 10px;
-}
+// Importing abstracts
+@use './abstracts/colors';
+
+// Importing vendors
+@use './vendors/bulma-framework';
+
+// Importing components
+@use './components/meme-card';
