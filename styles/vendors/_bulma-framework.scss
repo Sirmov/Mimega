@@ -1,5 +1,6 @@
 @use '../abstracts' as a;
 
-$primary: a.$primary;
+$primary: a.$purple;
+$link: a.$pink;
 
 @import 'bulma';
