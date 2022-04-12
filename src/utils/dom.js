@@ -1,5 +1,4 @@
 import { html } from 'lit-html';
-import '../../styles/dom.scss';
 
 export const spinner = () => html`<div class="spinner">
     <span class="spinner-inner-1"></span>

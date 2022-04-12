@@ -1,4 +1,6 @@
-$spinner: turquoise;
+@use '../abstracts' as a;
+
+$spinner: a.$pink;
 $background: white;
 $size: 50px;
 
