@@ -10,6 +10,7 @@ import {
     query,
     orderBy
 } from 'firebase/firestore';
+import { handleError } from '../utils/errorHandler';
 import { getUserUid } from './authenticationService';
 
 const collectionPath = 'memes';
@@ -30,30 +31,50 @@ export async function createMeme(db, auth, meme) {
         ownerId: getUserUid(auth)
     };
 
-    return addDoc(collectionRef(db), doc);
+    try {
+        return addDoc(collectionRef(db), doc);
+    } catch (error) {
+        handleError('Request', error);
+    }
 }
 
 export async function readAllMemes(db) {
-    const snapshot = await getDocs(collectionRef(db));
-    return snapshot.docs.map((doc) => {
-        return { ...doc.data(), id: doc.id };
-    });
+    try {
+        const snapshot = await getDocs(collectionRef(db));
+        return snapshot.docs.map((doc) => {
+            return { ...doc.data(), id: doc.id };
+        });
+    } catch (error) {
+        handleError('Request', error);
+    }
 }
 
 export async function readMeme(db, memeId) {
-    const doc = await getDoc(docRef(db, memeId));
-    return { ...doc.data(), id: doc.id };
+    try {
+        const doc = await getDoc(docRef(db, memeId));
+        return { ...doc.data(), id: doc.id };
+    } catch (error) {
+        handleError('Request', error);
+    }
 }
 
 export async function updateMeme(db, meme, memeId) {
-    const doc = {
-        ...meme,
-        updatedAt: serverTimestamp()
-    };
+    try {
+        const doc = {
+            ...meme,
+            updatedAt: serverTimestamp()
+        };
 
-    return updateDoc(docRef(db, memeId), doc);
+        return updateDoc(docRef(db, memeId), doc);
+    } catch (error) {
+        handleError('Request', error);
+    }
 }
 
 export async function deleteMeme(db, memeId) {
-    return deleteDoc(docRef(db, memeId));
+    try {
+        return deleteDoc(docRef(db, memeId));
+    } catch (error) {
+        handleError('Request', error);
+    }
 }

@@ -1,4 +1,5 @@
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, updateProfile } from 'firebase/auth';
+import { handleError } from '../utils/errorHandler';
 
 export async function login(auth, email, password) {
     try {
@@ -6,9 +7,7 @@ export async function login(auth, email, password) {
         const user = userCredential.user;
         return user;
     } catch (error) {
-        const errorMessage = error.message;
-        alert(errorMessage);
-        throw error;
+        handleError('Auth', error);
     }
 }
 
@@ -19,9 +18,7 @@ export async function register(auth, email, password, username) {
         updateProfile(user, { displayName: username });
         return user;
     } catch (error) {
-        const errorMessage = error.message;
-        alert(errorMessage);
-        throw error;
+        handleError('Auth', error);
     }
 }
 
@@ -29,9 +26,7 @@ export async function logout(auth) {
     try {
         await signOut(auth);
     } catch (error) {
-        const errorMessage = error.message;
-        alert(errorMessage);
-        throw error;
+        handleError('Auth', error);
     }
 }
 
