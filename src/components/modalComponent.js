@@ -17,25 +17,34 @@ function updateModalSelectors() {
 
 // Select modal children and add a click event
 
-const modalChildren =
-    document.querySelectorAll('.modal-background, .modal-close, .modal-card-head .delete, .modal-card-foot .button') ||
-    [];
-modalChildren.forEach((element) => {
-    element.addEventListener('click', closeModal);
-});
+let areAttached = false;
+function addModalCloseOnClick() {
+    const modalChildren =
+        document.querySelectorAll(
+            '.modal-background, .modal-close, .modal-card-head .delete, .modal-card-foot .button'
+        ) || [];
+    modalChildren.forEach((element) => {
+        element.addEventListener('click', closeModal);
+    });
+}
 
 export function openModal(title, message) {
+    // Attach event listeners on the first opening
+    if (!areAttached) {
+        addModalCloseOnClick();
+        areAttached = true;
+    }
+
     updateModalSelectors();
     modalTitle.textContent = title;
     modalMessage.textContent = message;
     modalContainer.classList.add('is-active');
-    document.addEventListener('keydown', onKeyDown);
+    document.addEventListener('keydown', onKeyDown, { once: true });
 }
 
 function closeModal() {
     updateModalSelectors();
     modalContainer.classList.remove('is-active');
-    document.removeEventListener('keydown', onKeyDown);
 }
 
 function onKeyDown(event) {
