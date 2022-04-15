@@ -1,4 +1,8 @@
 import { html } from 'lit-html';
+import { updateSelector } from '../../utils/dom';
+
+let navbarMenu;
+const navbarMenuSelector = 'nav > div.navbar-menu';
 
 export const navigationTemplate = (displayName, onLogout) =>
     html`<nav class="navbar" role="navigation" aria-label="main navigation">
@@ -6,6 +10,11 @@ export const navigationTemplate = (displayName, onLogout) =>
             <div class="navbar-item">
                 <p class="title is-4"><strong>Mimega</strong></p>
             </div>
+            <a class="navbar-burger" @click=${showBurgerMenu}>
+                <span></span>
+                <span></span>
+                <span></span>
+            </a>
         </div>
 
         <div class="navbar-menu">
@@ -17,7 +26,7 @@ export const navigationTemplate = (displayName, onLogout) =>
             <div class="navbar-end">
                 ${displayName
                     ? html`<div class="navbar-item">
-                              <p class="content">Hello, ${displayName}</p>
+                              <p class="content has-text-primary">Hello, ${displayName}</p>
                           </div>
                           <div class="navbar-item">
                               <a class="button is-primary" href="/create-meme">Upload meme</a>
@@ -34,3 +43,8 @@ export const navigationTemplate = (displayName, onLogout) =>
             </div>
         </div>
     </nav>`;
+
+function showBurgerMenu(event) {
+    navbarMenu = updateSelector(navbarMenu, navbarMenuSelector);
+    navbarMenu.classList.toggle('is-active');
+}
