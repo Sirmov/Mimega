@@ -47,4 +47,5 @@ export const navigationTemplate = (displayName, onLogout) =>
 function showBurgerMenu(event) {
     navbarMenu = updateSelector(navbarMenu, navbarMenuSelector);
     navbarMenu.classList.toggle('is-active');
+    event.currentTarget.classList.toggle('is-active');
 }
