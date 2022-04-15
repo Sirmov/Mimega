@@ -2,9 +2,7 @@ import { updateSelector } from '../utils/dom';
 
 // Modal selectors
 
-let modalContainer = {};
-let modalTitle = {};
-let modalMessage = {};
+let modalContainer, modalTitle, modalMessage;
 const modalContainerSelector = 'div.modal';
 const modalMessageSelector = '#modal-message';
 const modalTitleSelector = '#modal-title';
