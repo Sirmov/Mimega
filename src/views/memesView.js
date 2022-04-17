@@ -34,12 +34,34 @@ const memeCardTemplate = (meme, onDelete) =>
             </div>
             <footer class="card-footer">
                 ${meme.isOwner
-                    ? html`<a href="/edit-meme/${meme.id}" class="card-footer-item">Edit</a>
-                          <a href="javascript:void(0)" data-id=${meme.id} class="card-footer-item" @click=${onDelete}
-                              >Delete</a
-                          >`
-                    : nothing}
-                <a href="#" class="card-footer-item">Save</a>
+                    ? html`${cardFooterItemTemplate(
+                              'Edit',
+                              'warning',
+                              'fa-solid fa-pen-to-square',
+                              `/edit-meme/${meme.id}`
+                          )}
+
+                          <a
+                              href="javascript:void(0)"
+                              class="card-footer-item has-background-danger has-text-light"
+                              @click=${onDelete}
+                              data-id=${meme.id}
+                          >
+                              <span class="icon">
+                                  <i class="fa-solid fa-trash"></i>
+                              </span>
+                              Delete
+                          </a>`
+                    : cardFooterItemTemplate('Like', 'danger', 'fa-solid fa-heart')}
+                ${cardFooterItemTemplate('Comment', 'info', 'fa-solid fa-message')}
             </footer>
         </div>
     </div>`;
+
+const cardFooterItemTemplate = (text, color, icon, link = 'javascript:void(0)') =>
+    html`<a href=${link} class="card-footer-item has-background-${color} has-text-light">
+        <span class="icon">
+            <i class=${icon}></i>
+        </span>
+        ${text}
+    </a>`;
