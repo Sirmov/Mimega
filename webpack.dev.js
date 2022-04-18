@@ -12,7 +12,8 @@ module.exports = merge(common, {
     devtool: 'eval-source-map',
     plugins: [
         new HtmlWebpackPlugin({
-            template: './index.html'
+            template: './public/index.html',
+            favicon: './public/favicon.png'
         })
     ],
     module: {
