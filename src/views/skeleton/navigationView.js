@@ -1,5 +1,6 @@
 import { html } from 'lit-html';
 import { updateSelector } from '../../utils/dom';
+import bannerLogo from '../../../assets/images/banner.png';
 
 let navbarMenu;
 const navbarMenuSelector = 'nav > div.navbar-menu';
@@ -8,7 +9,7 @@ export const navigationTemplate = (displayName, onLogout) =>
     html`<nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <div class="navbar-item">
-                <p class="title is-4"><strong>Mimega</strong></p>
+                <img src=${bannerLogo} alt="Mimega" style="max-height: 40px;" />
             </div>
             <a class="navbar-burger" @click=${showBurgerMenu}>
                 <span></span>
