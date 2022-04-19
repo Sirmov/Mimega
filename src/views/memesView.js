@@ -3,17 +3,18 @@ import { repeat } from 'lit-html/directives/repeat.js';
 import { until } from 'lit-html/directives/until.js';
 import { spinner } from '../utils/dom';
 
-export const memesTemplate = (memesPromise) =>
-    html`<div class="columns is-multiline is-variable is-6">${until(memesPromise, spinner())}</div>`;
+export const memesTemplate = (memesPromise) => html`${until(memesPromise, spinner())}`;
 
 export const memeCardsTemplate = (memes, onDelete) =>
-    html`${memes.length > 0
-        ? html`${repeat(
-              memes,
-              (meme) => meme.id,
-              (meme, index) => memeCardTemplate(meme, onDelete)
-          )}`
-        : html`<h1>No memes sorry :(</h1>`}`;
+    html`<div class="columns is-multiline is-variable is-6">
+        ${memes.length > 0
+            ? html`${repeat(
+                memes,
+                (meme) => meme.id,
+                (meme, index) => memeCardTemplate(meme, onDelete)
+            )}
+        </div>`
+            : html`<h1>No memes sorry :(</h1>`}`;
 
 const memeCardTemplate = (meme, onDelete) =>
     html`<div class="column is-half">
