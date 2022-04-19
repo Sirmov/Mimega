@@ -9,12 +9,13 @@ export const memeCardsTemplate = (memes, onDelete) =>
     html`<div class="columns is-multiline is-variable is-6">
         ${memes.length > 0
             ? html`${repeat(
-                memes,
-                (meme) => meme.id,
-                (meme, index) => memeCardTemplate(meme, onDelete)
-            )}
+                  memes,
+                  (meme) => meme.id,
+                  (meme, index) => memeCardTemplate(meme, onDelete)
+              )}
         </div>`
-            : html`<h1>No memes sorry :(</h1>`}`;
+            : html`<h1>No memes sorry :(</h1>`}
+    </div>`;
 
 const memeCardTemplate = (meme, onDelete) =>
     html`<div class="column is-half">
@@ -30,7 +31,7 @@ const memeCardTemplate = (meme, onDelete) =>
             <div class="card-content">
                 <div class="content">
                     <p class="title is-6">${meme.author}</p>
-                    <time>${meme.updatedAt.toDate().toLocaleDateString()}</time>
+                    <time>Last updated: ${getDate(meme.updatedAt)}</time>
                 </div>
             </div>
             <footer class="card-footer">
@@ -66,3 +67,14 @@ const cardFooterItemTemplate = (text, color, icon, link = 'javascript:void(0)') 
         </span>
         ${text}
     </a>`;
+
+function getDate(timestamp) {
+    let date = timestamp.toDate();
+
+    let dd = String(date.getDate()).padStart(2, '0');
+    let mm = String(date.getMonth() + 1).padStart(2, '0');
+    let yyyy = date.getFullYear();
+
+    date = dd + '/' + mm + '/' + yyyy;
+    return date;
+}
