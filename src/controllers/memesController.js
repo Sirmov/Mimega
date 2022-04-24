@@ -7,6 +7,8 @@ import { appendMemes, memeCardsTemplate, memesGridTemplate, memesTemplate } from
 // Declare event handlers in outer scope
 let onDelete, onScroll;
 
+const pageOffset = 250;
+
 export function memesController(ctx, next) {
     // Decorate event handlers
     onDelete = createEventHandler(ctx, deleteMemeAction);
@@ -38,7 +40,7 @@ async function fetchMemes(ctx, isFirstPage = false) {
 
 const createScrollHandler = (ctx) =>
     async function () {
-        if (window.innerHeight + window.scrollY == document.body.offsetHeight) {
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight - pageOffset) {
             let memes = await fetchMemes(ctx);
             if (memes !== false) {
                 appendMemes(memeCardsTemplate(memes, onDelete));
