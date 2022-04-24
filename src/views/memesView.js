@@ -1,21 +1,27 @@
-import { html, nothing } from 'lit-html';
+import { html, nothing, render } from 'lit-html';
 import { repeat } from 'lit-html/directives/repeat.js';
 import { until } from 'lit-html/directives/until.js';
+import { createRef, ref } from 'lit-html/directives/ref.js';
 import { spinner } from '../utils/dom';
+
+const memesContainer = createRef();
 
 export const memesTemplate = (memesPromise) => html`${until(memesPromise, spinner())}`;
 
-export const memeCardsTemplate = (memes, onDelete) =>
-    html`<div class="columns is-multiline is-variable is-6">
-        ${memes.length > 0
-            ? html`${repeat(
-                  memes,
-                  (meme) => meme.id,
-                  (meme, index) => memeCardTemplate(meme, onDelete)
-              )}
-        </div>`
-            : html`<h1>No memes sorry :(</h1>`}
+export const memesGridTemplate = (memes, onDelete) =>
+    html`<div class="columns is-multiline is-variable is-6" ${ref(memesContainer)}>
+        ${memeCardsTemplate(memes, onDelete)}
     </div>`;
+
+export const memeCardsTemplate = (memes, onDelete) =>
+    html`${memes.length > 0
+        ? html`${repeat(
+              memes,
+              (meme) => meme.id,
+              (meme, index) => memeCardTemplate(meme, onDelete)
+          )}
+</div>`
+        : html`<h1>No memes sorry :(</h1>`}`;
 
 const memeCardTemplate = (meme, onDelete) =>
     html`<div class="column is-half">
@@ -67,6 +73,10 @@ const cardFooterItemTemplate = (text, color, icon, link = 'javascript:void(0)') 
         </span>
         ${text}
     </a>`;
+
+export function appendMemes(memes) {
+    render(memes, memesContainer.value);
+}
 
 function getDate(timestamp) {
     let date = timestamp.toDate();

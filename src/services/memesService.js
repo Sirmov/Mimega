@@ -8,17 +8,27 @@ import {
     updateDoc,
     serverTimestamp,
     query,
-    orderBy
+    orderBy,
+    limit,
+    startAfter
 } from 'firebase/firestore';
 import { handleError } from '../utils/errorHandler';
 import { getUserUid } from './authenticationService';
 
+// Useful functions to get references
 const collectionPath = 'memes';
 const collectionRef = (db) => collection(db, collectionPath);
 const docRef = (db, docId) => doc(db, collectionPath, docId);
 
+// Variables used for pagination
+const pageSize = 4;
+let lastDocument = null;
+
+// Memes queries
 const queries = {
-    recent: (db) => query(collectionRef(db), orderBy('createdAt', 'desc'))
+    recent: (db) => query(collectionRef(db), orderBy('createdAt', 'desc')),
+    recentFirstPage: (db) => query(collectionRef(db), orderBy('createdAt', 'desc'), limit(pageSize)),
+    recentPage: (db, last) => query(collectionRef(db), orderBy('createdAt', 'desc'), startAfter(last), limit(pageSize))
 };
 
 export async function createMeme(db, auth, meme) {
@@ -38,9 +48,30 @@ export async function createMeme(db, auth, meme) {
     }
 }
 
+export async function readMemesPage(db, isFirstPage) {
+    try {
+        let query = isFirstPage ? queries.recentFirstPage(db) : queries.recentPage(db, lastDocument);
+        const snapshot = await getDocs(query);
+
+        // Return false if there are no memes left
+        if (snapshot.empty) {
+            return false;
+        }
+        
+        // Update last document
+        lastDocument = snapshot.docs[snapshot.docs.length - 1];
+
+        return snapshot.docs.map((doc) => {
+            return { ...doc.data(), id: doc.id };
+        });
+    } catch (error) {
+        handleError('Request', error);
+    }
+}
+
 export async function readAllMemes(db) {
     try {
-        const snapshot = await getDocs(collectionRef(db));
+        const snapshot = await getDocs(queries.recent(db));
         return snapshot.docs.map((doc) => {
             return { ...doc.data(), id: doc.id };
         });
