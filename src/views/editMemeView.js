@@ -76,7 +76,7 @@ export const editFormTemplate = (editSubmit, meme, validation) =>
 
                 <div class="field pt-3">
                     <div class="control">
-                        <button class="button is-primary mr-5" type="submit">Upload meme</button>
+                        <button class="button is-primary mr-5" type="submit">Edit meme</button>
                         <button class="button has-background-grey-lighter" @click=${cancelAction}>Cancel</button>
                     </div>
                 </div>
