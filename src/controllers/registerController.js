@@ -7,8 +7,12 @@ const emailRegex = /\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/;
 const numbersRegex = /\d/;
 const specialCharactersRegex = /[^A-z\s\d][\\\^]?/;
 
+// Declare event handlers in outer scope
+let onRegister;
+
 export function registerController(ctx, next) {
-    ctx.render(registerTemplate(createSubmitHandler(ctx, registerSubmit, allowedData)));
+    onRegister = createSubmitHandler(ctx, registerSubmit, allowedData);
+    ctx.render(registerTemplate(onRegister));
 }
 
 async function registerSubmit(ctx, data, event) {
@@ -51,7 +55,7 @@ async function registerSubmit(ctx, data, event) {
     }
 
     if (Object.entries(validation).some(([k, v]) => v.isValid === false)) {
-        ctx.render(registerTemplate(createSubmitHandler(ctx, registerSubmit, allowedData), validation));
+        ctx.render(registerTemplate(onRegister, validation));
     } else {
         await register(ctx.auth, data.email, data.password, data.username);
         event.target.reset();

@@ -4,8 +4,12 @@ import { createSubmitHandler } from '../utils/decorators';
 
 const allowedData = ['title', 'imageUrl', 'author'];
 
+// Declare event handlers in outer scope
+let onUpload;
+
 export function uploadMemeController(ctx, next) {
-    ctx.render(uploadMemeTemplate(createSubmitHandler(ctx, uploadSubmit, allowedData)));
+    onUpload = createSubmitHandler(ctx, uploadSubmit, allowedData);
+    ctx.render(uploadMemeTemplate(onUpload));
 }
 
 async function uploadSubmit(ctx, data, event) {
@@ -40,7 +44,7 @@ async function uploadSubmit(ctx, data, event) {
     }
 
     if (Object.entries(validation).some(([k, v]) => v.isValid === false)) {
-        ctx.render(uploadMemeTemplate(createSubmitHandler(ctx, uploadSubmit, allowedData), validation));
+        ctx.render(uploadMemeTemplate(onUpload, validation));
     } else {
         await createMeme(ctx.db, ctx.auth, data);
         event.target.reset();
