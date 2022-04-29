@@ -1,4 +1,4 @@
-import { html, nothing, render } from 'lit-html';
+import { html, render } from 'lit-html';
 import { repeat } from 'lit-html/directives/repeat.js';
 import { until } from 'lit-html/directives/until.js';
 import { createRef, ref } from 'lit-html/directives/ref.js';
