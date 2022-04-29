@@ -36,6 +36,7 @@ import { registerController } from './controllers/registerController';
 import { memesController } from './controllers/memesController';
 import { uploadMemeController } from './controllers/uploadMemeController';
 import { editMemeController } from './controllers/editMemeController';
+import { termsAndConditionsController } from './controllers/termsAndConditionsController';
 
 // Register routes
 page(dependenciesMiddleware({ app, auth, db }));
@@ -46,5 +47,6 @@ page('/sign-up', registerController);
 page('/memes', memesController);
 page('/create-meme', uploadMemeController);
 page('/edit-meme/:id', editMemeController);
+page('/terms-and-conditions', termsAndConditionsController);
 
 page.start();

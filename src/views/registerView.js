@@ -80,7 +80,11 @@ export const registerTemplate = (registerSubmit, validation) =>
                             name="termsAndConditions"
                             class="${validation ? (!validation.termsAndConditions.isValid ? 'is-danger' : '') : ''}"
                         />
-                        I agree to the <a href="/terms-and-conditions">terms and conditions</a>.
+                        I acknowledge that I have read and agree to the
+                        <a href="/terms-and-conditions">Terms and Conditions</a> and
+                        <a href="https://www.privacypolicies.com/live/6b9b6214-ee59-41bc-9e53-d279264c9fc9"
+                            >Privacy Policy</a
+                        >.
                     </div>
                     <p class="help ${validation ? (!validation.termsAndConditions.isValid ? 'is-danger' : '') : ''}">
                         ${validation ? validation.termsAndConditions.message : nothing}
