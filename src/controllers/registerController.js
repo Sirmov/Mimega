@@ -2,7 +2,7 @@ import { register } from '../services/authenticationService';
 import { createSubmitHandler } from '../utils/decorators';
 import { registerTemplate } from '../views/registerView';
 
-const allowedData = ['username', 'email', 'password'];
+const allowedData = ['username', 'email', 'password', 'termsAndConditions'];
 const emailRegex = /\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/;
 const numbersRegex = /\d/;
 const specialCharactersRegex = /[^A-z\s\d][\\\^]?/;
@@ -52,6 +52,14 @@ async function registerSubmit(ctx, data, event) {
     }
     if (validation.password.isValid === true) {
         validation.password.message = 'Password is valid.';
+    }
+
+    // Terms and conditions validation
+    if (data.termsAndConditions) {
+        validation.termsAndConditions.isValid = true;
+    } else {
+        validation.termsAndConditions.isValid = false;
+        validation.termsAndConditions.message = 'You must accept the terms and conditions to register.';
     }
 
     if (Object.entries(validation).some(([k, v]) => v.isValid === false)) {

@@ -72,7 +72,23 @@ export const registerTemplate = (registerSubmit, validation) =>
                 </div>
 
                 <div class="field">
-                    <p class="content">Already have an account? Log in <a href="/login">here</a>.</p>
+                    <div class="control">
+                        <label class="checkbox"></label>
+                        <input
+                            type="checkbox"
+                            id="termsAndConditions"
+                            name="termsAndConditions"
+                            class="${validation ? (!validation.termsAndConditions.isValid ? 'is-danger' : '') : ''}"
+                        />
+                        I agree to the <a href="/terms-and-conditions">terms and conditions</a>.
+                    </div>
+                    <p class="help ${validation ? (!validation.termsAndConditions.isValid ? 'is-danger' : '') : ''}">
+                        ${validation ? validation.termsAndConditions.message : nothing}
+                    </p>
+                </div>
+
+                <div class="field">
+                    <p class="content ml-1">Already have an account? Log in <a href="/login">here</a>.</p>
                 </div>
 
                 <div class="field pt-3">
