@@ -25,7 +25,7 @@ const docRef = (db, docId) => doc(db, collectionPath, docId);
 const queries = {
     memeLikes: (db, memeId) => query(collectionRef(db), where('memeId', '==', memeId)),
     userLike: (db, memeId, userId) =>
-        query(collectionRef(db), where('memeId', '==', memeId), where('ownerId', '=='), userId)
+        query(collectionRef(db), where('memeId', '==', memeId), where('ownerId', '==', userId))
 };
 
 export async function createLike(db, auth, memeId) {
@@ -52,7 +52,7 @@ export async function readMemeLikes(db, memeId) {
         const snapshot = await getDocs(query);
         return snapshot.size;
     } catch (error) {
-        handleError(error);
+        handleError('Request', error);
     }
 }
 
@@ -63,7 +63,7 @@ export async function readUserLike(db, auth, memeId) {
         const snapshot = await getDocs(query);
         return snapshot.size;
     } catch (error) {
-        handleError(error);
+        handleError('Request', error);
     }
 }
 
@@ -73,6 +73,6 @@ export async function deleteUserLike(db, auth, memeId) {
     try {
         await deleteDoc(docRef(db, likeId))
     } catch (error) {
-        handleError(error)
+        handleError('Request', error)
     }
 }
