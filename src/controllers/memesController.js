@@ -1,11 +1,12 @@
 import { deleteMemeAction } from '../actions/deleteMemeAction';
+import { likeMemeAction } from '../actions/likeAction';
 import { getUserUid } from '../services/authenticationService';
 import { readMemesPage } from '../services/memesService';
 import { createEventHandler } from '../utils/decorators';
 import { appendMemes, memeCardsTemplate, memesGridTemplate, memesTemplate } from '../views/memesView';
 
 // Declare event handlers in outer scope
-let onDelete, onScroll;
+let onDelete, onScroll, onLike;
 
 const thresholdOffset = 250;
 
@@ -13,6 +14,7 @@ export function memesController(ctx, next) {
     // Decorate event handlers
     onDelete = createEventHandler(ctx, deleteMemeAction);
     onScroll = createScrollHandler(ctx);
+    onLike = createEventHandler(ctx, likeMemeAction);
     window.addEventListener('scroll', onScroll);
 
     ctx.render(memesTemplate(renderMemes(ctx)));
@@ -20,7 +22,7 @@ export function memesController(ctx, next) {
 
 async function renderMemes(ctx) {
     let memes = await fetchMemes(ctx, true);
-    return memesGridTemplate(memes, onDelete);
+    return memesGridTemplate(memes, onDelete, onLike);
 }
 
 async function fetchMemes(ctx, isFirstPage = false) {
@@ -45,7 +47,7 @@ const createScrollHandler = (ctx) =>
             let memes = await fetchMemes(ctx);
 
             if (memes !== false) {
-                appendMemes(memeCardsTemplate(memes, onDelete));
+                appendMemes(memeCardsTemplate(memes, onDelete, onLike));
             }
         }
     };

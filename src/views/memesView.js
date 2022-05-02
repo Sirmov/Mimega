@@ -1,4 +1,4 @@
-import { html, render } from 'lit-html';
+import { html, render, nothing } from 'lit-html';
 import { repeat } from 'lit-html/directives/repeat.js';
 import { until } from 'lit-html/directives/until.js';
 import { createRef, ref } from 'lit-html/directives/ref.js';
@@ -8,22 +8,22 @@ const memesContainer = createRef();
 
 export const memesTemplate = (memesPromise) => html`${until(memesPromise, spinner())}`;
 
-export const memesGridTemplate = (memes, onDelete) =>
+export const memesGridTemplate = (memes, onDelete, onLike) =>
     html`<div class="columns is-vcentered is-multiline is-variable is-6" ${ref(memesContainer)}>
-        ${memeCardsTemplate(memes, onDelete)}
+        ${memeCardsTemplate(memes, onDelete, onLike)}
     </div>`;
 
-export const memeCardsTemplate = (memes, onDelete) =>
+export const memeCardsTemplate = (memes, onDelete, onLike) =>
     html`${memes.length > 0
         ? html`${repeat(
               memes,
               (meme) => meme.id,
-              (meme, index) => memeCardTemplate(meme, onDelete)
+              (meme, index) => memeCardTemplate(meme, onDelete, onLike)
           )}
 </div>`
         : html`<h1>No memes sorry :(</h1>`}`;
 
-const memeCardTemplate = (meme, onDelete) =>
+const memeCardTemplate = (meme, onDelete, onLike) =>
     html`<div class="column is-one-third-widescreen is-half-tablet">
         <div class="card meme-card">
             <header class="card-header">
@@ -43,31 +43,27 @@ const memeCardTemplate = (meme, onDelete) =>
             <footer class="card-footer">
                 ${meme.isOwner
                     ? html`${cardFooterItemTemplate(
-                              'Edit',
-                              'warning',
-                              'fa-solid fa-pen-to-square',
-                              `/edit-meme/${meme.id}`
-                          )}
-
-                          <a
-                              href="javascript:void(0)"
-                              class="card-footer-item has-background-danger has-text-light"
-                              @click=${onDelete}
-                              data-id=${meme.id}
-                          >
-                              <span class="icon">
-                                  <i class="fa-solid fa-trash"></i>
-                              </span>
-                              Delete
-                          </a>`
-                    : cardFooterItemTemplate('Like', 'danger', 'fa-solid fa-heart')}
-                ${cardFooterItemTemplate('Comment', 'info', 'fa-solid fa-message')}
+                        meme,
+                          'Edit',
+                          'warning',
+                          'fa-solid fa-pen-to-square',
+                          nothing,
+                          `/edit-meme/${meme.id}`
+                      )}
+                      ${cardFooterItemTemplate(meme, 'Delete', 'danger', 'fa-solid fa-trash', onDelete)}`
+                    : cardFooterItemTemplate(meme, 'Like', 'danger', 'fa-solid fa-heart', onLike)}
+                ${cardFooterItemTemplate(meme, 'Comment', 'info', 'fa-solid fa-message')}
             </footer>
         </div>
     </div>`;
 
-const cardFooterItemTemplate = (text, color, icon, link = 'javascript:void(0)') =>
-    html`<a href=${link} class="card-footer-item has-background-${color} has-text-light">
+const cardFooterItemTemplate = (meme, text, color, icon, eventHandler = null, link = 'javascript:void(0)') =>
+    html`<a
+        href=${link}
+        class="card-footer-item has-background-${color} has-text-light"
+        data-id=${meme.id}
+        @click=${eventHandler}
+    >
         <span class="icon">
             <i class=${icon}></i>
         </span>
