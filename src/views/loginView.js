@@ -45,7 +45,7 @@ export const loginTemplate = (loginSubmit, validation) =>
                 </div>
 
                 <div class="field">
-                    <p class="content">Dont't have an account? Sign up <a href="/sign-up">here</a>.</p>
+                    <p class="content ml-1">Dont't have an account? Sign up <a href="/sign-up">here</a>.</p>
                 </div>
 
                 <div class="field pt-3">

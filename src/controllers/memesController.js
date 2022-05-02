@@ -7,7 +7,7 @@ import { appendMemes, memeCardsTemplate, memesGridTemplate, memesTemplate } from
 // Declare event handlers in outer scope
 let onDelete, onScroll;
 
-const pageOffset = 250;
+const thresholdOffset = 250;
 
 export function memesController(ctx, next) {
     // Decorate event handlers
@@ -29,7 +29,7 @@ async function fetchMemes(ctx, isFirstPage = false) {
     // Remove event listener if there are no memes left
     if (memes === false) {
         window.removeEventListener('scroll', onScroll);
-        return memes;
+        return false;
     }
 
     // Attach a is owner property to all memes
@@ -40,8 +40,10 @@ async function fetchMemes(ctx, isFirstPage = false) {
 
 const createScrollHandler = (ctx) =>
     async function () {
-        if (window.innerHeight + window.scrollY >= document.body.offsetHeight - pageOffset) {
+        // Check wether scroll position exceeds threshold
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight - thresholdOffset) {
             let memes = await fetchMemes(ctx);
+
             if (memes !== false) {
                 appendMemes(memeCardsTemplate(memes, onDelete));
             }

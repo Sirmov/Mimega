@@ -2,13 +2,17 @@ import { register } from '../services/authenticationService';
 import { createSubmitHandler } from '../utils/decorators';
 import { registerTemplate } from '../views/registerView';
 
-const allowedData = ['username', 'email', 'password'];
+const allowedData = ['username', 'email', 'password', 'termsAndConditions'];
 const emailRegex = /\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/;
 const numbersRegex = /\d/;
 const specialCharactersRegex = /[^A-z\s\d][\\\^]?/;
 
+// Declare event handlers in outer scope
+let onRegister;
+
 export function registerController(ctx, next) {
-    ctx.render(registerTemplate(createSubmitHandler(ctx, registerSubmit, allowedData)));
+    onRegister = createSubmitHandler(ctx, registerSubmit, allowedData);
+    ctx.render(registerTemplate(onRegister));
 }
 
 async function registerSubmit(ctx, data, event) {
@@ -50,8 +54,16 @@ async function registerSubmit(ctx, data, event) {
         validation.password.message = 'Password is valid.';
     }
 
+    // Terms and conditions validation
+    if (data.termsAndConditions) {
+        validation.termsAndConditions.isValid = true;
+    } else {
+        validation.termsAndConditions.isValid = false;
+        validation.termsAndConditions.message = 'You must accept the terms and conditions to register.';
+    }
+
     if (Object.entries(validation).some(([k, v]) => v.isValid === false)) {
-        ctx.render(registerTemplate(createSubmitHandler(ctx, registerSubmit, allowedData), validation));
+        ctx.render(registerTemplate(onRegister, validation));
     } else {
         await register(ctx.auth, data.email, data.password, data.username);
         event.target.reset();

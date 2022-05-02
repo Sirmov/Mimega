@@ -7,8 +7,12 @@ const emailRegex = /\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/;
 const numbersRegex = /\d/;
 const specialCharactersRegex = /[^A-z\s\d][\\\^]?/;
 
+// Declare event handlers in outer scope
+let onLogin;
+
 export function loginController(ctx, next) {
-    ctx.render(loginTemplate(createSubmitHandler(ctx, loginSubmit, allowedData)));
+    loginSubmit = createSubmitHandler(ctx, loginSubmit, allowedData);
+    ctx.render(loginTemplate(loginSubmit));
 }
 
 async function loginSubmit(ctx, data, event) {
@@ -36,7 +40,7 @@ async function loginSubmit(ctx, data, event) {
     }
 
     if (Object.entries(validation).some(([k, v]) => v.isValid === false)) {
-        ctx.render(loginTemplate(createSubmitHandler(ctx, loginSubmit, allowedData), validation));
+        ctx.render(loginTemplate(onLogin, validation));
     } else {
         await login(ctx.auth, data.email, data.password);
         event.target.reset();

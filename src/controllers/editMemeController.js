@@ -4,14 +4,18 @@ import { editFormTemplate, editMemeTemplate } from '../views/editMemeView';
 
 const allowedData = ['title', 'imageUrl', 'author'];
 
+// Declare event handlers in outer scope
+let onEdit;
+
 export function editMemeController(ctx, next) {
+    onEdit = createSubmitHandler(ctx, editSubmit, allowedData);
     ctx.render(editMemeTemplate(renderForm(ctx)));
 }
 
 async function renderForm(ctx) {
     let meme = await readMeme(ctx.db, ctx.params.id);
 
-    return editFormTemplate(createSubmitHandler(ctx, editSubmit, allowedData), meme);
+    return editFormTemplate(onEdit, meme);
 }
 
 async function editSubmit(ctx, data, event) {
@@ -46,7 +50,7 @@ async function editSubmit(ctx, data, event) {
     }
 
     if (Object.entries(validation).some(([k, v]) => v.isValid === false)) {
-        ctx.render(editFormTemplate(createSubmitHandler(ctx, editSubmit, allowedData), data, validation));
+        ctx.render(editFormTemplate(onEdit, data, validation));
     } else {
         await updateMeme(ctx.db, data, ctx.params.id);
         event.target.reset();

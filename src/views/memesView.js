@@ -1,4 +1,4 @@
-import { html, nothing, render } from 'lit-html';
+import { html, render } from 'lit-html';
 import { repeat } from 'lit-html/directives/repeat.js';
 import { until } from 'lit-html/directives/until.js';
 import { createRef, ref } from 'lit-html/directives/ref.js';
@@ -9,7 +9,7 @@ const memesContainer = createRef();
 export const memesTemplate = (memesPromise) => html`${until(memesPromise, spinner())}`;
 
 export const memesGridTemplate = (memes, onDelete) =>
-    html`<div class="columns is-multiline is-variable is-6" ${ref(memesContainer)}>
+    html`<div class="columns is-vcentered is-multiline is-variable is-6" ${ref(memesContainer)}>
         ${memeCardsTemplate(memes, onDelete)}
     </div>`;
 
@@ -24,10 +24,10 @@ export const memeCardsTemplate = (memes, onDelete) =>
         : html`<h1>No memes sorry :(</h1>`}`;
 
 const memeCardTemplate = (meme, onDelete) =>
-    html`<div class="column is-half">
+    html`<div class="column is-one-third-widescreen is-half-tablet">
         <div class="card meme-card">
             <header class="card-header">
-                <h1 class="card-header-title title is-size-5-desktop is-size-6-mobile">${meme.title}</h1>
+                <h1 class="card-header-title title is-size-5-desktop is-size-6-touch">${meme.title}</h1>
             </header>
             <div class="card-image">
                 <figure class="image is-5by4">
