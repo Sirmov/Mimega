@@ -31,7 +31,7 @@ const queries = {
 export async function createLike(db, auth, memeId) {
     const userUid = getUserUid(auth);
     // Generate like id based on user id and meme id
-    const likeId = `${userUid.slice(0, 10)}${memeId.slice(10)}`;
+    const likeId = generateLikeId(userUid, memeId);
 
     const like = {
         createdAt: serverTimestamp(),
@@ -69,10 +69,14 @@ export async function readUserLike(db, auth, memeId) {
 
 export async function deleteUserLike(db, auth, memeId) {
     const userUid = getUserUid(auth);
-    const likeId = `${userUid.slice(0, 10)}${memeId.slice(10)}`;
+    const likeId = generateLikeId(userUid, memeId);
     try {
         await deleteDoc(docRef(db, likeId))
     } catch (error) {
         handleError(error)
     }
+}
+
+function generateLikeId(userUid, memeId) {
+    return userUid.slice(0, 10) + memeId.slice(10);
 }
