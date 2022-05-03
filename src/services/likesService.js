@@ -12,7 +12,10 @@ import {
     orderBy,
     limit,
     startAfter,
-    where
+    where,
+    writeBatch,
+    increment,
+    arrayUnion
 } from 'firebase/firestore';
 import { handleError } from '../utils/errorHandler';
 import { getUserUid } from './authenticationService';
@@ -30,7 +33,6 @@ const queries = {
 
 export async function createLike(db, auth, memeId) {
     const userUid = getUserUid(auth);
-    // Generate like id based on user id and meme id
     const likeId = generateLikeId(userUid, memeId);
 
     const like = {
@@ -40,7 +42,12 @@ export async function createLike(db, auth, memeId) {
     };
 
     try {
-        return setDoc(docRef(db, likeId), like);
+        const batch = writeBatch(db);
+        // Create like document
+        batch.set(docRef(db, likeId), like);
+        // Increment likes and add user uid to meme document
+        batch.update(doc(db, 'memes', memeId), { likes: increment(1), whoLiked: arrayUnion(userUid), isLike: true });
+        return await batch.commit();
     } catch (error) {
         handleError('Request', error);
     }
@@ -71,12 +78,13 @@ export async function deleteUserLike(db, auth, memeId) {
     const userUid = getUserUid(auth);
     const likeId = generateLikeId(userUid, memeId);
     try {
-        await deleteDoc(docRef(db, likeId))
+        await deleteDoc(docRef(db, likeId));
     } catch (error) {
-        handleError('Request', error)
+        handleError('Request', error);
     }
 }
 
 function generateLikeId(userUid, memeId) {
+    // Generate like id based on user id and meme id
     return userUid.slice(0, 10) + memeId.slice(10);
 }

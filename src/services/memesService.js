@@ -93,6 +93,7 @@ export async function updateMeme(db, meme, memeId) {
     try {
         const doc = {
             ...meme,
+            isLike: false,
             updatedAt: serverTimestamp()
         };
 
