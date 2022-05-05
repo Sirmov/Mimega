@@ -38,7 +38,9 @@ export async function createMeme(db, auth, meme) {
         ...meme,
         createdAt: timestamp,
         updatedAt: timestamp,
-        ownerId: getUserUid(auth)
+        ownerId: getUserUid(auth),
+        likes: 0,
+        whoLiked: []
     };
 
     try {
@@ -57,7 +59,7 @@ export async function readMemesPage(db, isFirstPage) {
         if (snapshot.empty) {
             return false;
         }
-        
+
         // Update last document
         lastDocument = snapshot.docs[snapshot.docs.length - 1];
 
@@ -93,7 +95,6 @@ export async function updateMeme(db, meme, memeId) {
     try {
         const doc = {
             ...meme,
-            isLike: false,
             updatedAt: serverTimestamp()
         };
 

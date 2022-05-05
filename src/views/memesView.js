@@ -8,22 +8,22 @@ const memesContainer = createRef();
 
 export const memesTemplate = (memesPromise) => html`${until(memesPromise, spinner())}`;
 
-export const memesGridTemplate = (memes, onDelete, onLike) =>
+export const memesGridTemplate = (memes, onDelete, onLike, onUnlike) =>
     html`<div class="columns is-vcentered is-multiline is-variable is-6" ${ref(memesContainer)}>
-        ${memeCardsTemplate(memes, onDelete, onLike)}
+        ${memeCardsTemplate(memes, onDelete, onLike, onUnlike)}
     </div>`;
 
-export const memeCardsTemplate = (memes, onDelete, onLike) =>
+export const memeCardsTemplate = (memes, onDelete, onLike, onUnlike) =>
     html`${memes.length > 0
         ? html`${repeat(
               memes,
               (meme) => meme.id,
-              (meme, index) => memeCardTemplate(meme, onDelete, onLike)
+              (meme, index) => memeCardTemplate(meme, onDelete, onLike, onUnlike)
           )}
 </div>`
         : html`<h1>No memes sorry :(</h1>`}`;
 
-const memeCardTemplate = (meme, onDelete, onLike) =>
+const memeCardTemplate = (meme, onDelete, onLike, onUnlike) =>
     html`<div class="column is-one-third-widescreen is-half-tablet">
         <div class="card meme-card">
             <header class="card-header">
@@ -43,15 +43,17 @@ const memeCardTemplate = (meme, onDelete, onLike) =>
             <footer class="card-footer">
                 ${meme.isOwner
                     ? html`${cardFooterItemTemplate(
-                        meme,
+                          meme,
                           'Edit',
                           'warning',
                           'fa-solid fa-pen-to-square',
-                          nothing,
+                          null,
                           `/edit-meme/${meme.id}`
                       )}
                       ${cardFooterItemTemplate(meme, 'Delete', 'danger', 'fa-solid fa-trash', onDelete)}`
-                    : cardFooterItemTemplate(meme, 'Like', 'danger', 'fa-solid fa-heart', onLike)}
+                    : meme.isLiked
+                    ? html`${cardFooterItemTemplate(meme, 'Unlike', 'danger', 'fa-solid fa-heart', onUnlike)}`
+                    : html`${cardFooterItemTemplate(meme, 'Like', 'danger', 'fa-solid fa-heart', onLike)}`}
                 ${cardFooterItemTemplate(meme, 'Comment', 'info', 'fa-solid fa-message')}
             </footer>
         </div>

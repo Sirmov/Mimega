@@ -42,17 +42,19 @@ export async function createLike(db, auth, memeId) {
         ownerId: userUid
     };
 
+    // Increment meme likes and add user uid to who liked array
+    const meme = {
+        likes: increment(1),
+        whoLiked: arrayUnion(userUid),
+        likeId: likeId,
+        operation: 'like'
+    };
+
     try {
         const batch = writeBatch(db);
         // Create like document
         batch.set(docRef(db, likeId), like);
-        // Increment meme likes and add user uid to who liked array
-        batch.update(doc(db, 'memes', memeId), {
-            likes: increment(1),
-            whoLiked: arrayUnion(userUid),
-            likeId: likeId,
-            operation: 'like'
-        });
+        batch.update(doc(db, 'memes', memeId), meme);
         return await batch.commit();
     } catch (error) {
         handleError('Request', error);
@@ -84,18 +86,20 @@ export async function deleteUserLike(db, auth, memeId) {
     const userUid = getUserUid(auth);
     const likeId = generateLikeId(userUid, memeId);
 
+    // Decrement meme likes and remove user uid from who liked array
+    const meme = {
+        likes: increment(-1),
+        whoLiked: arrayRemove(userUid),
+        likeId: likeId,
+        operation: 'unlike'
+    }
+
     try {
         const batch = writeBatch(db);
         // Delete like document
         batch.delete(docRef(db, likeId));
-        // Decrement meme likes and remove user uid from who liked array
-        batch.update(doc(db, 'memes', memeId), {
-            likes: increment(-1),
-            whoLiked: arrayRemove(userUid),
-            likeId: likeId,
-            operation: 'unlike'
-        });
-        await deleteDoc(docRef(db, likeId));
+        batch.update(doc(db, 'memes', memeId), meme);
+        return await batch.commit();
     } catch (error) {
         handleError('Request', error);
     }
