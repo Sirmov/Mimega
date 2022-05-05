@@ -53,7 +53,7 @@ You can install the project in three different ways.
 ### 3. Using a [Git GUI client](https://git-scm.com/downloads/guis)
 
 ## ⌨️🖱️ Usage
-You can visit the site [here](https://mimega-b819a.web.app) or run it on a local development server. To do that, firstly you have to [install](https://github.com/Sirmov/Mimega/blob/main/README.md#installing-the-project) the project. Note that you need to have [Node.js](https://nodejs.org/en/) installed on your machine. After that open the root directory of the project in your prefered terminal. Type ```npm install```. After you have successfully installed all of the dependecies type ```npm run start``` to start the local development server. To stop it simply close the terminal or press CTRL + C while in it.
+You can visit the site [here](https://mimega-b819a.web.app) or run it on a local development server. To do that, firstly you have to [install](https://github.com/Sirmov/Mimega#-installing-the-project) the project. Note that you need to have [Node.js](https://nodejs.org/en/) installed on your machine. After that open the root directory of the project in your prefered terminal. Type ```npm install```. After you have successfully installed all of the dependecies type ```npm run start``` to start the local development server. To stop it simply close the terminal or press CTRL + C while in it.
 
 ## 📑 License
 The project is licensed under the [MIT](https://github.com/Sirmov/Mimega/blob/main/LICENSE) license.
