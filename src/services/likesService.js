@@ -15,7 +15,8 @@ import {
     where,
     writeBatch,
     increment,
-    arrayUnion
+    arrayUnion,
+    arrayRemove
 } from 'firebase/firestore';
 import { handleError } from '../utils/errorHandler';
 import { getUserUid } from './authenticationService';
@@ -45,8 +46,13 @@ export async function createLike(db, auth, memeId) {
         const batch = writeBatch(db);
         // Create like document
         batch.set(docRef(db, likeId), like);
-        // Increment likes and add user uid to meme document
-        batch.update(doc(db, 'memes', memeId), { likes: increment(1), whoLiked: arrayUnion(userUid), isLike: true });
+        // Increment meme likes and add user uid to who liked array
+        batch.update(doc(db, 'memes', memeId), {
+            likes: increment(1),
+            whoLiked: arrayUnion(userUid),
+            likeId: likeId,
+            operation: 'like'
+        });
         return await batch.commit();
     } catch (error) {
         handleError('Request', error);
@@ -77,7 +83,18 @@ export async function readUserLike(db, auth, memeId) {
 export async function deleteUserLike(db, auth, memeId) {
     const userUid = getUserUid(auth);
     const likeId = generateLikeId(userUid, memeId);
+
     try {
+        const batch = writeBatch(db);
+        // Delete like document
+        batch.delete(docRef(db, likeId));
+        // Decrement meme likes and remove user uid from who liked array
+        batch.update(doc(db, 'memes', memeId), {
+            likes: increment(-1),
+            whoLiked: arrayRemove(userUid),
+            likeId: likeId,
+            operation: 'unlike'
+        });
         await deleteDoc(docRef(db, likeId));
     } catch (error) {
         handleError('Request', error);
