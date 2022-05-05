@@ -42,7 +42,7 @@ export async function createMeme(db, auth, meme) {
     };
 
     try {
-        return addDoc(collectionRef(db), doc);
+        return await addDoc(collectionRef(db), doc);
     } catch (error) {
         handleError('Request', error);
     }
@@ -97,7 +97,7 @@ export async function updateMeme(db, meme, memeId) {
             updatedAt: serverTimestamp()
         };
 
-        return updateDoc(docRef(db, memeId), doc);
+        return await updateDoc(docRef(db, memeId), doc);
     } catch (error) {
         handleError('Request', error);
     }
@@ -105,7 +105,7 @@ export async function updateMeme(db, meme, memeId) {
 
 export async function deleteMeme(db, memeId) {
     try {
-        return deleteDoc(docRef(db, memeId));
+        return await deleteDoc(docRef(db, memeId));
     } catch (error) {
         handleError('Request', error);
     }
