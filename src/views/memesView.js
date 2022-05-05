@@ -23,54 +23,33 @@ export const memeCardsTemplate = (memes, onDelete, onLike, onUnlike) =>
 </div>`
         : html`<h1>No memes sorry :(</h1>`}`;
 
-const memeCardTemplate = (meme, onDelete, onLike, onUnlike) =>
+const memeCardTemplate = (meme) =>
     html`<div class="column is-one-third-widescreen is-half-tablet">
-        <div class="card meme-card">
-            <header class="card-header">
-                <h1 class="card-header-title title is-size-5-desktop is-size-6-touch">${meme.title}</h1>
-            </header>
-            <div class="card-image">
-                <figure class="image is-5by4">
-                    <img src=${meme.imageUrl} alt="Meme image" />
-                </figure>
-            </div>
-            <div class="card-content">
-                <div class="content">
-                    <p class="title is-6">${meme.author}</p>
-                    <time>Last updated: ${getDate(meme.updatedAt)}</time>
+        <a href="/memes/${meme.id}">
+            <div class="card meme-card">
+                <header class="card-header">
+                    <h1 class="card-header-title title is-size-5-desktop is-size-6-touch">${meme.title}</h1>
+                </header>
+                <div class="card-image">
+                    <figure class="image is-5by4">
+                        <img src=${meme.imageUrl} alt="Meme image" />
+                    </figure>
+                </div>
+                <div class="card-content">
+                    <div class="content">
+                        <p class="title is-6">${meme.author}</p>
+                        <p>
+                            <span class="icon">
+                                <i class="fa-solid fa-heart"></i>
+                            </span>
+                            <span class="content mr-3">${meme.likes}</span>
+                            <time>Last updated: ${getDate(meme.updatedAt)}</time>
+                        </p>
+                    </div>
                 </div>
             </div>
-            <footer class="card-footer">
-                ${meme.isOwner
-                    ? html`${cardFooterItemTemplate(
-                          meme,
-                          'Edit',
-                          'warning',
-                          'fa-solid fa-pen-to-square',
-                          null,
-                          `/edit-meme/${meme.id}`
-                      )}
-                      ${cardFooterItemTemplate(meme, 'Delete', 'danger', 'fa-solid fa-trash', onDelete)}`
-                    : meme.isLiked
-                    ? html`${cardFooterItemTemplate(meme, 'Unlike', 'danger', 'fa-solid fa-heart', onUnlike)}`
-                    : html`${cardFooterItemTemplate(meme, 'Like', 'danger', 'fa-solid fa-heart', onLike)}`}
-                ${cardFooterItemTemplate(meme, 'Comment', 'info', 'fa-solid fa-message')}
-            </footer>
-        </div>
+        </a>
     </div>`;
-
-const cardFooterItemTemplate = (meme, text, color, icon, eventHandler = null, link = 'javascript:void(0)') =>
-    html`<a
-        href=${link}
-        class="card-footer-item has-background-${color} has-text-light"
-        data-id=${meme.id}
-        @click=${eventHandler}
-    >
-        <span class="icon">
-            <i class=${icon}></i>
-        </span>
-        ${text}
-    </a>`;
 
 export function appendMemes(memes) {
     render(memes, memesContainer.value);
