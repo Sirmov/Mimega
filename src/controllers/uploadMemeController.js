@@ -46,8 +46,8 @@ async function uploadSubmit(ctx, data, event) {
     if (Object.entries(validation).some(([k, v]) => v.isValid === false)) {
         ctx.render(uploadMemeTemplate(onUpload, validation));
     } else {
-        await createMeme(ctx.db, ctx.auth, data);
+        let meme = await createMeme(ctx.db, ctx.auth, data);
         event.target.reset();
-        ctx.page.redirect('/');
+        ctx.page.redirect(`/memes/${meme.id}`);
     }
 }

@@ -54,6 +54,6 @@ async function editSubmit(ctx, data, event) {
     } else {
         await updateMeme(ctx.db, data, ctx.params.id);
         event.target.reset();
-        ctx.page.redirect('/memes');
+        ctx.page.redirect(`/memes/${ctx.params.id}`);
     }
 }
