@@ -7,7 +7,15 @@ import { getDate, spinner } from '../utils/dom';
 const cardFooter = createRef();
 const likesRef = createRef();
 
-export const memeTemplate = (memePromise) => html`<div class="columns">${until(memePromise, spinner())}</div>`;
+export const memeTemplate = (memePromise) => html`<div class="columns">
+    ${until(memePromise, spinner())}
+    <div class="column is-half ">
+        <div class="box">
+            <h1 class="title is-size-3">Comments</h1>
+            <p class="content is-size-5">Under development. 👾</p>
+        </div>
+    </div>
+</div>`;
 
 export const memeCardTemplate = (meme, onDelete, onLike, onUnlike) =>
     html` <div class="column is-half">
