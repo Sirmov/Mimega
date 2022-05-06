@@ -69,9 +69,11 @@ export const memeFooterTemplate = (meme, onDelete, onLike, onUnlike) =>
               `/edit-meme/${meme.id}`
           )}
           ${cardFooterItemTemplate(meme, 'Delete', 'danger', 'fa-solid fa-trash', onDelete)}`
-        : meme.isLiked
+        : meme.isLogged 
+        ? meme.isLiked
         ? html`${cardFooterItemTemplate(meme, 'Unlike', 'danger', 'fa-solid fa-heart', onUnlike)}`
-        : html`${cardFooterItemTemplate(meme, 'Like', 'danger', 'fa-solid fa-heart', onLike)}`}`;
+        : html`${cardFooterItemTemplate(meme, 'Like', 'danger', 'fa-solid fa-heart', onLike)}`
+        : html`${cardFooterItemTemplate(meme, 'You have to be logged in to like memes.', 'link')}`}`;
 
 const cardFooterItemTemplate = (meme, text, color, icon, eventHandler = null, link = 'javascript:void(0)') =>
     html`<a

@@ -27,6 +27,7 @@ async function renderMemeCard(ctx) {
 export async function renderMemeFooter(ctx) {
     const userUid = getUserUid(ctx.auth);
     let meme = await readMeme(ctx.db, ctx.params.id);
+    meme.isLogged = Boolean(userUid);
     meme.isOwner = userUid === meme.ownerId;
     meme.isLiked = meme.whoLiked.some((x) => x === userUid);
     return memeFooterTemplate(meme, onDelete, onLike, onUnlike);
