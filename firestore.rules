@@ -5,175 +5,185 @@ service cloud.firestore {
       allow read: if true
 
       allow create: if
-      	isLoggedIn() &&
-        isValidMeme(incomingData()) &&
-        checkKeys(incomingData());
+      isLoggedIn() &&
+      isValidMeme(incomingData()) &&
+      checkKeys(incomingData(), ['createdAt','imageUrl','ownerId','title','updatedAt', 'author', 'likes', 'whoLiked'], ['likeId', 'operation']);
 
       allow update: if 
-      	isLoggedIn() &&
-        isCalm() &&
-        isOwner(incomingData().ownerId) &&
-        isOwner(existingData().ownerId) &&
-        isValidMeme(incomingData()) &&
-        checkKeys(incomingData());
+      isLoggedIn() &&
+      (
+      // There are three scenarios
+
+      // The requeset is from the owner of the meme
+      (
+      isOwner(existingData().ownerId) && isOwner(incomingData().ownerId)
+      ) ||
+      // The request is a like operaion
+      (
+      incomingData().operation == 'like' &&
+      !exists(/databases/$(database)/documents/likes/$(incomingData().likeId)) &&
+      existingData().diff(incomingData()).affectedKeys().hasOnly(['likes', 'whoLiked', 'likeId', 'operation'])
+      ) ||
+      // The request is a unlike operaion
+      (
+      incomingData().operation == 'unlike' &&
+      exists(/databases/$(database)/documents/likes/$(incomingData().likeId)) &&
+      existingData().diff(incomingData()).affectedKeys().hasOnly(['likes', 'whoLiked', 'likeId', 'operation'])
+      )
+      ) &&
+      isValidMeme(incomingData()) &&
+      checkKeys(incomingData(), ['createdAt','imageUrl','ownerId','title','updatedAt', 'author'], ['likeId', 'operation', 'likes', 'whoLiked']);
 
       allow delete: if
-      	isLoggedIn() &&
-      	isOwner(existingData().ownerId);
+      isLoggedIn() &&
+      isOwner(existingData().ownerId);
 
       // Validation Functions
-  
+
       function isValidMeme(meme) {
         return (
-          // meme.createdAt
-          meme.createdAt is timestamp &&
-          meme.createdAt != '' &&
-          // meme.imageUrl
-          meme.imageUrl is string &&
-          meme.imageUrl != '' &&
-          // meme.ownerId
-          meme.ownerId is string &&
-          meme.ownerId != '' &&
-          // meme.title
-          meme.title is string &&
-          meme.title != '' &&
-          // meme.updatedAt
-          meme.updatedAt is timestamp &&
-          meme.updatedAt != '' &&
-          // meme.author
-          meme.author is string &&
-          meme.author != ''
+        // meme.createdAt
+        meme.createdAt is timestamp &&
+        meme.createdAt != '' &&
+        // meme.imageUrl
+        meme.imageUrl is string &&
+        meme.imageUrl != '' &&
+        // meme.ownerId
+        meme.ownerId is string &&
+        meme.ownerId != '' &&
+        // meme.title
+        meme.title is string &&
+        meme.title != '' &&
+        // meme.updatedAt
+        meme.updatedAt is timestamp &&
+        meme.updatedAt != '' &&
+        // meme.author
+        meme.author is string &&
+        meme.author != '' &&
+        // meme likes
+        meme.likes is number &&
+        meme.likes != '' &&
+        // meme whoLiked
+        meme.whoLiked is list &&
+        meme.whoLiked != ''
         );
       }
-
-      function checkKeys(meme) {
-        let requiredFields = ['createdAt','imageUrl','ownerId','title','updatedAt', 'author'];
-        let optionalFields = [];
-        let allFields = requiredFields.concat(optionalFields);
-        return meme.keys().hasAll(requiredFields) &&
-        	meme.keys().hasOnly(allFields)
-      }
     }
-    
+
     match /likes/{itemId}{
       allow read: if true
 
-      allow create: if 
-      	isLoggedIn() &&
-        isValidLike(incomingData()) &&
-        checkKeys(incomingData());
+      allow create: if
+      isLoggedIn() &&
+      isValidLike(incomingData()) &&
+      !exists(/databases/$(database)/documents/likes/$(incomingDataId())) &&
+      checkKeys(incomingData(), ['createdAt','memeId','ownerId'], []);
 
       allow delete: if 
-      	isLoggedIn() &&
-      	isOwner(existingData().ownerId);
+      isLoggedIn() &&
+      isOwner(existingData().ownerId);
 
       // Validation Functions
-  
+
       function isValidLike(like) {
         return (
-          // like.createdAt
-          like.createdAt is timestamp &&
-          like.createdAt != '' &&
-          // like.memeId
-          like.memeId is string &&
-          like.memeId != '' &&
-          // like.ownerId
-          like.ownerId is string &&
-          like.ownerId != '' 
+        // like.createdAt
+        like.createdAt is timestamp &&
+        like.createdAt != '' &&
+        // like.memeId
+        like.memeId is string &&
+        like.memeId != '' &&
+        // like.ownerId
+        like.ownerId is string &&
+        like.ownerId != '' 
         );
       }
-
-      function checkKeys(like) {
-        let requiredFields = ['createdAt','memeId','ownerId'];
-        let optionalFields = [];
-        let allFields = requiredFields.concat(optionalFields);
-        return like.keys().hasAll(requiredFields) &&
-        	like.keys().hasOnly(allFields)
-      }
     }
-    
+
     match /comments/{itemId}{
       allow read: if true
 
       allow create: if
-      	isLoggedIn() &&
-      	isValidComment(incomingData()) &&
-        checkKeys(incomingData());
+      isLoggedIn() &&
+      isValidComment(incomingData()) &&
+      checkKeys(incomingData());
 
       allow update: if
-      	isLoggedIn() &&
-        isCalm() &&
-        isOwner(incomingData().ownerId) &&
-        isOwner(existingData().ownerId) &&
-      	isValidComment(incomingData()) &&
-        checkKeys(incomingData());
+      isLoggedIn() &&
+      isCalm() &&
+      isOwner(incomingData().ownerId) &&
+      isOwner(existingData().ownerId) &&
+      isValidComment(incomingData()) &&
+      checkKeys(incomingData(), ['comment','createdAt','memeId','ownerId','updatedAt'], []);
 
       allow delete: if
-      	isLoggedIn() &&
-      	isOwner(existingData().ownerId);
-      
+      isLoggedIn() &&
+      isOwner(existingData().ownerId);
+
       // Validation Functions
-      
+
       function isValidComment(comment) {
         return (
-          // comment.comment
-          comment.comment is string &&
-          comment.comment != '' &&
-          // comment.createdAt
-          comment.createdAt is timestamp &&
-          comment.createdAt != '' &&
-          // comment.memeId
-          comment.memeId is string &&
-          comment.memeId != '' &&
-          // comment.ownerId
-          comment.ownerId is string &&
-          comment.ownerId != '' &&
-          // comment.updatedAt
-          comment.updatedAt is timestamp &&
-          comment.updatedAt != '' 
+        // comment.comment
+        comment.comment is string &&
+        comment.comment != '' &&
+        // comment.createdAt
+        comment.createdAt is timestamp &&
+        comment.createdAt != '' &&
+        // comment.memeId
+        comment.memeId is string &&
+        comment.memeId != '' &&
+        // comment.ownerId
+        comment.ownerId is string &&
+        comment.ownerId != '' &&
+        // comment.updatedAt
+        comment.updatedAt is timestamp &&
+        comment.updatedAt != '' 
         );
-      }
-
-      function checkKeys(comment) {
-        let requiredFields = ['comment','createdAt','memeId','ownerId','updatedAt'];
-        let optionalFields = [];
-        let allFields = requiredFields.concat(optionalFields);
-        return comment.keys().hasAll(requiredFields) &&
-        	comment.keys().hasOnly(allFields)
       }
     }
   }
-  
+
   // Common Functions
-  
+
   function isLoggedIn() {
-  	return request.auth != null;
+    return request.auth != null;
   }
-  
+
   function isOwner(itemOwnerId) {
     return request.auth.uid == itemOwnerId;
   }
-  
+
   function emailVerified() {
-  	return request.auth.token.email_verified;
+    return request.auth.token.email_verified;
   }
-  
+
   function getUserData() {
-		return get(/databases/$(database)/documents/users/$(request.auth.uid));
+    return get(/databases/$(database)/documents/users/$(request.auth.uid));
   }
-  
+
   function existingData() {
-  	return resource.data;
+    return resource.data;
   }
-  
+
   function incomingData() {
-  	return request.resource.data;
+    return request.resource.data;
   }
-  
+
+  function incomingDataId() {
+    return request.resource.id;
+  }
+
+  function checkKeys(item, requiredFields, optionalFields) {
+    let allFields = requiredFields.concat(optionalFields);
+    return item.keys().hasAll(requiredFields) &&
+    item.keys().hasOnly(allFields)
+  }
+
   function isCalm() {
     return (
-      request.time > resource.data.updatedAt +
-      duration.value(5, 's')
+    request.time > resource.data.updatedAt +
+    duration.value(5, 's')
     ); 
   }
 }
