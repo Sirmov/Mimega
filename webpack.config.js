@@ -2,8 +2,8 @@ const path = require('path');
 
 module.exports = {
     entry: {
-        vendor: './src/vendor.js',
-        main: './src/app.js'
+        vendor: path.resolve(__dirname, 'src', 'vendor.js'),
+        main: path.resolve(__dirname, 'src', 'app.js')
     },
     devServer: {
         historyApiFallback: true
