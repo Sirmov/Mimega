@@ -2,7 +2,7 @@ import { html, render, nothing } from 'lit-html';
 import { repeat } from 'lit-html/directives/repeat.js';
 import { until } from 'lit-html/directives/until.js';
 import { createRef, ref } from 'lit-html/directives/ref.js';
-import { spinner } from '../utils/dom';
+import { getDate, spinner } from '../utils/dom';
 
 const memesContainer = createRef();
 
@@ -53,15 +53,4 @@ const memeCardTemplate = (meme) =>
 
 export function appendMemes(memes) {
     render(memes, memesContainer.value);
-}
-
-function getDate(timestamp) {
-    let date = timestamp.toDate();
-
-    let dd = String(date.getDate()).padStart(2, '0');
-    let mm = String(date.getMonth() + 1).padStart(2, '0');
-    let yyyy = date.getFullYear();
-
-    date = dd + '/' + mm + '/' + yyyy;
-    return date;
 }
