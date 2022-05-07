@@ -106,7 +106,7 @@ service cloud.firestore {
       allow create: if
       isLoggedIn() &&
       isValidComment(incomingData()) &&
-      checkKeys(incomingData());
+      checkKeys(incomingData(), ['comment', 'author', 'createdAt', 'memeId', 'ownerId', 'updatedAt'], []);
 
       allow update: if
       isLoggedIn() &&
@@ -114,7 +114,7 @@ service cloud.firestore {
       isOwner(incomingData().ownerId) &&
       isOwner(existingData().ownerId) &&
       isValidComment(incomingData()) &&
-      checkKeys(incomingData(), ['comment','createdAt','memeId','ownerId','updatedAt'], []);
+      checkKeys(incomingData(), ['comment', 'author', 'createdAt', 'memeId', 'ownerId', 'updatedAt'], []);
 
       allow delete: if
       isLoggedIn() &&
@@ -127,6 +127,9 @@ service cloud.firestore {
         // comment.comment
         comment.comment is string &&
         comment.comment != '' &&
+        // comment.author
+        comment.author is string &&
+        comment.author != '' &&
         // comment.createdAt
         comment.createdAt is timestamp &&
         comment.createdAt != '' &&
