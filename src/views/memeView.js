@@ -6,12 +6,13 @@ import { getDate, spinner } from '../utils/dom';
 
 const cardFooter = createRef();
 const likesRef = createRef();
+const commentsRef = createRef();
 
 export const memeTemplate = (memePromise, commentsPromise) =>
     html`<div class="columns">${until(memePromise, spinner())} ${until(commentsPromise, spinner())}</div>`;
 
 export const memeCardTemplate = (meme, onDelete, onLike, onUnlike) =>
-    html` <div class="column is-half">
+    html`<div class="column is-half">
         <section class="card meme-card">
             <header class="card-header">
                 <h1 class="card-header-title title is-size-5-desktop is-size-6-touch">${meme.title}</h1>
@@ -68,15 +69,15 @@ export const memeFooterTemplate = (meme, onDelete, onLike, onUnlike) =>
             : html`${cardFooterItemTemplate(meme, 'Like', 'danger', 'fa-solid fa-heart', onLike)}`
         : html`${cardFooterItemTemplate(meme, 'You have to be logged in to like memes.', 'link')}`}`;
 
-export const commentsTemplate = (comments, onSubmit, validation) =>
+export const commentsTemplate = (comments, onSubmit, onDelete, validation) =>
     html`<div class="column is-half">
         <section class="box">
             <h1 class="title is-size-3">Comments</h1>
-            <div class="container comments mb-5">
+            <div class="container comments mb-5" ${ref(commentsRef)}>
                 ${repeat(
                     comments,
                     (comment) => comment.id,
-                    (comment, index) => commentTemplate(comment)
+                    (comment, index) => commentTemplate(comment, onDelete)
                 )}
             </div>
             <div class="container comments-form">${commentFormTemplate(onSubmit, validation)}</div>
@@ -102,49 +103,42 @@ export const commentFormTemplate = (onSubmit, validation) =>
             <div class="control">
                 <button class="button is-primary mr-5" type="submit">Submit comment</button>
             </div>
-            <p class="help ${validation ? (validation.comment.isValid ? 'is-success' : 'is-danger') : ''}">
-                ${validation ? validation.comment.message : nothing}
-            </p>
         </div>
+        <p class="help ${validation ? (validation.comment.isValid ? 'is-success' : 'is-danger') : ''}">
+            ${validation ? validation.comment.message : nothing}
+        </p>
     </form>`;
 
-const commentTemplate = (comment) =>
+const commentTemplate = (comment, onDelete) =>
     html`<div class="box">
         <div class="content">
             <p><strong>${comment.author}</strong></p>
             <p>${comment.comment}</p>
         </div>
         <nav class="level is-mobile">
-            <div class="level-left">
-                <a class="level-item" aria-label="reply">
-                    <span class="icon is-small">
-                        <i class="fas fa-reply" aria-hidden="true"></i>
-                    </span>
-                </a>
-                <a class="level-item" aria-label="retweet">
-                    <span class="icon is-small">
-                        <i class="fas fa-retweet" aria-hidden="true"></i>
-                    </span>
-                </a>
-                <a class="level-item" aria-label="like">
-                    <span class="icon is-small">
-                        <i class="fas fa-heart" aria-hidden="true"></i>
-                    </span>
-                </a>
-            </div>
+            ${comment.isOwner
+                ? html`<div class="level-left">
+                      <a class="level-item" href="edit-comment/${comment.id}">
+                          <span class="icon is-small">
+                              <i class="fas fa-pen-to-square"></i>
+                          </span>
+                      </a>
+                      <a class="level-item" @click=${onDelete}>
+                          <span class="icon is-small">
+                              <i class="fas fa-xmark"></i>
+                          </span>
+                      </a>
+                  </div>`
+                : html``}
+
             <div class="level-right">
                 <p>Last updated: ${getDate(comment.updatedAt)}</p>
             </div>
         </nav>
     </div>`;
 
-const cardFooterItemTemplate = (meme, text, color, icon, eventHandler = null, link = 'javascript:void(0)') =>
-    html`<a
-        href=${link}
-        class="card-footer-item has-background-${color} has-text-light"
-        data-id=${meme.id}
-        @click=${eventHandler}
-    >
+const cardFooterItemTemplate = (meme, text, color, icon, eventHandler = null) =>
+    html`<a class="card-footer-item has-background-${color} has-text-light" data-id=${meme.id} @click=${eventHandler}>
         <span class="icon">
             <i class=${icon} style="color: #ffffff"></i>
         </span>
