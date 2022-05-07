@@ -30,13 +30,13 @@ let lastDocument = null;
 
 // Comments queries
 const queries = {
-    recent: (db, memeId) => query(collectionRef(db), orderBy('createdAt', 'desc'), where('memeId', '==', memeId)),
+    recent: (db, memeId) => query(collectionRef(db), orderBy('createdAt', 'asc'), where('memeId', '==', memeId)),
     recentFirstPage: (db, memeId) =>
-        query(collectionRef(db), orderBy('createdAt', 'desc'), where('memeId', '==', memeId), limit(pageSize)),
+        query(collectionRef(db), orderBy('createdAt', 'asc'), where('memeId', '==', memeId), limit(pageSize)),
     recentNextPage: (db, memeId, last) =>
         query(
             collectionRef(db),
-            orderBy('createdAt', 'desc'),
+            orderBy('createdAt', 'asc'),
             where('memeId', '==', memeId),
             startAfter(last),
             limit(pageSize)
@@ -44,7 +44,7 @@ const queries = {
     recentPreviousPage: (db, memeId, first) =>
         query(
             collectionRef(db),
-            orderBy('createdAt', 'desc'),
+            orderBy('createdAt', 'asc'),
             where('memeId', '==', memeId),
             endBefore(first),
             limitToLast(pageSize)
