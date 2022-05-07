@@ -12,7 +12,8 @@ import {
     limit,
     startAfter,
     endBefore,
-    limitToLast
+    limitToLast,
+    where
 } from 'firebase/firestore';
 import { handleError } from '../utils/errorHandler';
 import { getUserDisplayName, getUserUid } from './authenticationService';
@@ -29,10 +30,25 @@ let lastDocument = null;
 
 // Comments queries
 const queries = {
-    recent: (db) => query(collectionRef(db), orderBy('createdAt', 'desc')),
-    recentFirstPage: (db) => query(collectionRef(db), orderBy('createdAt', 'desc'), limit(pageSize)),
-    recentNextPage: (db, last) => query(collectionRef(db), orderBy('createdAt', 'desc'), startAfter(last), limit(pageSize)),
-    recentPreviousPage: (db, first) => query(collectionRef(db), orderBy('createdAt', 'desc'), endBefore(first), limitToLast(pageSize)),
+    recent: (db, memeId) => query(collectionRef(db), orderBy('createdAt', 'desc'), where('memeId', '==', memeId)),
+    recentFirstPage: (db, memeId) =>
+        query(collectionRef(db), orderBy('createdAt', 'desc'), where('memeId', '==', memeId), limit(pageSize)),
+    recentNextPage: (db, memeId, last) =>
+        query(
+            collectionRef(db),
+            orderBy('createdAt', 'desc'),
+            where('memeId', '==', memeId),
+            startAfter(last),
+            limit(pageSize)
+        ),
+    recentPreviousPage: (db, memeId, first) =>
+        query(
+            collectionRef(db),
+            orderBy('createdAt', 'desc'),
+            where('memeId', '==', memeId),
+            endBefore(first),
+            limitToLast(pageSize)
+        )
 };
 
 export async function createComment(db, auth, comment) {
@@ -53,9 +69,9 @@ export async function createComment(db, auth, comment) {
     }
 }
 
-export async function readCommentsFirstPage(db) {
+export async function readCommentsFirstPage(db, memeId) {
     try {
-        const snapshot = await getDocs(queries.recentFirstPage(db));
+        const snapshot = await getDocs(queries.recentFirstPage(db, memeId));
 
         // Update first and last document
         firstDocument = snapshot.docs[0];
@@ -69,9 +85,11 @@ export async function readCommentsFirstPage(db) {
     }
 }
 
-export async function readCommentsPage(db, isNext) {
+export async function readCommentsPage(db, memeId, isNext) {
     try {
-        let query = isNext ? queries.recentNextPage(db, lastDocument) : queries.recentPreviousPage(db, firstDocument);
+        let query = isNext
+            ? queries.recentNextPage(db, memeId, lastDocument)
+            : queries.recentPreviousPage(db, memeId, firstDocument);
         const snapshot = await getDocs(query);
 
         // Update first and last document
@@ -86,9 +104,9 @@ export async function readCommentsPage(db, isNext) {
     }
 }
 
-export async function readAllComments(db) {
+export async function readAllComments(db, memeId) {
     try {
-        const snapshot = await getDocs(queries.recent(db));
+        const snapshot = await getDocs(queries.recent(db, memeId));
         return snapshot.docs.map((doc) => {
             return { ...doc.data(), id: doc.id };
         });
