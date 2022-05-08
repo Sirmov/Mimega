@@ -3,10 +3,19 @@ import { deleteMemeAction } from '../actions/deleteMemeAction';
 import { likeMemeAction } from '../actions/likeMemeAction';
 import { unlikeMemeAction } from '../actions/unlikeMemeAction';
 import { getUserUid } from '../services/authenticationService';
-import { createComment, readAllComments } from '../services/commentsService';
+import { createComment, readAllComments, readComment } from '../services/commentsService';
 import { readMeme } from '../services/memesService';
 import { createEventHandler, createSubmitHandler } from '../utils/decorators';
-import { commentsTemplate, memeCardTemplate, memeFooterTemplate, memeTemplate } from '../views/memeView';
+import {
+    reRenderComments,
+    commentCardsTemplate,
+    commentsTemplate,
+    commentTemplate,
+    memeCardTemplate,
+    memeFooterTemplate,
+    memeTemplate,
+    reRenderCommentFormMessage
+} from '../views/memeView';
 
 const allowedData = ['comment'];
 let onLikeDelete, onCommentDelete, onLike, onUnlike, onSubmit;
@@ -28,9 +37,9 @@ async function renderMemeCard(ctx) {
     return memeCardTemplate(meme, onLikeDelete, onLike, onUnlike);
 }
 
-async function renderComments(ctx, validation) {
+async function renderComments(ctx) {
     let comments = await fetchComments(ctx);
-    return commentsTemplate(comments, onSubmit, onCommentDelete, validation);
+    return commentsTemplate(comments, onSubmit, onCommentDelete);
 }
 
 export async function renderMemeFooter(ctx) {
@@ -55,11 +64,24 @@ async function onCommentSubmit(ctx, data, event) {
     }
 
     if (Object.entries(validation).some(([k, v]) => v.isValid === false)) {
-        ctx.render(memeTemplate(renderMemeCard(ctx), renderComments(ctx, validation)));
+        updateCommentFormMessage(validation.comment.message);
     } else {
-        let comment = await createComment(ctx.db, ctx.auth, { ...data, memeId: ctx.params.id });
+        await createComment(ctx.db, ctx.auth, { ...data, memeId: ctx.params.id });
         event.target.reset();
+        updateCommentFormMessage('');
+        updateComments(ctx);
     }
+}
+
+// Data updating functions
+
+async function updateComments(ctx) {
+    const comments = await fetchComments(ctx);
+    reRenderComments(comments, onCommentDelete);
+}
+
+function updateCommentFormMessage(message) {
+    reRenderCommentFormMessage(message);
 }
 
 // Data fetching functions
