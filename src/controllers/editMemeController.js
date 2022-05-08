@@ -8,13 +8,13 @@ const allowedData = ['title', 'imageUrl', 'author'];
 let onEdit;
 
 export function editMemeController(ctx, next) {
+    // Decorate event handlers
     onEdit = createSubmitHandler(ctx, editSubmit, allowedData);
     ctx.render(editMemeTemplate(renderForm(ctx)));
 }
 
 async function renderForm(ctx) {
     let meme = await readMeme(ctx.db, ctx.params.id);
-
     return editFormTemplate(onEdit, meme);
 }
 

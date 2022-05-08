@@ -5,19 +5,16 @@ import { until } from 'lit-html/directives/until.js';
 import { getDate, spinner } from '../utils/dom';
 
 // Element references
-
 const cardFooter = createRef();
 const likesRef = createRef();
 const commentsRef = createRef();
 const commentFormMessageRef = createRef();
 
 // Main view template
-
 export const memeTemplate = (memePromise, commentsPromise) =>
     html`<div class="columns">${until(memePromise, spinner())} ${until(commentsPromise, spinner())}</div>`;
 
 // Meme templates and logic
-
 export const memeCardTemplate = (meme, onDelete, onLike, onUnlike, onShare) =>
     html`<div class="column is-half">
         <section class="card meme-card">
@@ -93,7 +90,6 @@ export function updateMemeOnLike(memePromise, isLike) {
 }
 
 // Comments templates and logic
-
 export const commentsTemplate = (comments, isLogged, onSubmit, onDelete) =>
     html`<div class="column is-half">
         <section class="box">

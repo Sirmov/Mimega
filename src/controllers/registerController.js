@@ -11,6 +11,7 @@ const specialCharactersRegex = /[^A-z\s\d][\\\^]?/;
 let onRegister;
 
 export function registerController(ctx, next) {
+    // Decorate event handlers
     onRegister = createSubmitHandler(ctx, registerSubmit, allowedData);
     ctx.render(registerTemplate(onRegister));
 }

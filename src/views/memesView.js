@@ -4,6 +4,7 @@ import { until } from 'lit-html/directives/until.js';
 import { createRef, ref } from 'lit-html/directives/ref.js';
 import { getDate, spinner } from '../utils/dom';
 
+// Element references
 const memesContainer = createRef();
 
 export const memesTemplate = (memesPromise) => html`${until(memesPromise, spinner())}`;

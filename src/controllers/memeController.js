@@ -17,9 +17,12 @@ import {
 } from '../views/memeView';
 
 const allowedData = ['comment'];
+
+// Declare event handlers in outer scope
 let onLikeDelete, onCommentDelete, onLike, onUnlike, onSubmit, onShare;
 
 export function memeController(ctx, next) {
+    // Decorate event handlers
     onLikeDelete = createEventHandler(ctx, deleteMemeAction);
     onLike = createEventHandler(ctx, likeMemeAction);
     onUnlike = createEventHandler(ctx, unlikeMemeAction);
@@ -31,7 +34,6 @@ export function memeController(ctx, next) {
 }
 
 // Rendering functions
-
 async function renderMemeCard(ctx) {
     let meme = await fetchMeme(ctx);
     return memeCardTemplate(meme, onLikeDelete, onLike, onUnlike, onShare);
@@ -48,7 +50,6 @@ export async function renderMemeFooter(ctx) {
 }
 
 // Comment submit event handler
-
 async function onCommentSubmit(ctx, data, event) {
     let validation = {};
     allowedData.forEach((d) => (validation[d] = { isValid: true, message: '' }));
@@ -74,7 +75,6 @@ async function onCommentSubmit(ctx, data, event) {
 }
 
 // Data updating functions
-
 async function updateComments(ctx) {
     const comments = await fetchComments(ctx);
     reRenderComments(comments, onCommentDelete);
@@ -85,7 +85,6 @@ function updateCommentFormMessage(message) {
 }
 
 // Data fetching functions
-
 async function fetchMeme(ctx) {
     const userUid = getUserUid(ctx.auth);
     let meme = await readMeme(ctx.db, ctx.params.id);
@@ -103,7 +102,6 @@ async function fetchComments(ctx) {
 }
 
 // Share event handler
-
 function shareClick(ctx, event) {
     const memeId = event.currentTarget.dataset.id;
     navigator.clipboard.writeText(`https://mimega-b819a.web.app/${memeId}`);

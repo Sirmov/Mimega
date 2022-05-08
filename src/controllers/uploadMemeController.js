@@ -8,6 +8,7 @@ const allowedData = ['title', 'imageUrl', 'author'];
 let onUpload;
 
 export function uploadMemeController(ctx, next) {
+    // Decorate event handlers
     onUpload = createSubmitHandler(ctx, uploadSubmit, allowedData);
     ctx.render(uploadMemeTemplate(onUpload));
 }

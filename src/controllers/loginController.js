@@ -11,8 +11,9 @@ const specialCharactersRegex = /[^A-z\s\d][\\\^]?/;
 let onLogin;
 
 export function loginController(ctx, next) {
-    loginSubmit = createSubmitHandler(ctx, loginSubmit, allowedData);
-    ctx.render(loginTemplate(loginSubmit));
+    // Decorate event handlers
+    onLogin = createSubmitHandler(ctx, loginSubmit, allowedData);
+    ctx.render(loginTemplate(onLogin));
 }
 
 async function loginSubmit(ctx, data, event) {

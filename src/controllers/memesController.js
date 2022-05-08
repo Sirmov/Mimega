@@ -16,6 +16,7 @@ export function memesController(ctx, next) {
     ctx.render(memesTemplate(renderMemes(ctx)));
 }
 
+// Rendering functions
 async function renderMemes(ctx) {
     let memes = await fetchMemes(ctx, true);
     return memesGridTemplate(memes);
@@ -41,6 +42,7 @@ async function fetchMemes(ctx, isFirstPage = false) {
     return memes;
 }
 
+// Scroll handler
 const createScrollHandler = (ctx) =>
     async function () {
         // Check wether scroll position exceeds threshold
