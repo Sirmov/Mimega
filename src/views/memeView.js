@@ -96,11 +96,13 @@ export const commentsTemplate = (comments, onSubmit, onDelete) =>
     </div>`;
 
 export const commentCardsTemplate = (comments, onDelete) =>
-    html`${repeat(
-        comments,
-        (comment) => comment.id,
-        (comment, index) => commentTemplate(comment, onDelete)
-    )}`;
+    html`${comments.length > 0
+        ? repeat(
+              comments,
+              (comment) => comment.id,
+              (comment, index) => commentTemplate(comment, onDelete)
+          )
+        : html`<p class="is-size-4">Be the first one to comment ;)</p>`}`;
 
 export const commentFormTemplate = (onSubmit) =>
     html`<form @submit=${onSubmit} class="container">
@@ -112,6 +114,11 @@ export const commentFormTemplate = (onSubmit) =>
                     <i class="fa-solid fa-comment"></i>
                 </span>
             </div>
+            <div class="control is-hidden-touch">
+                <button class="button is-primary mr-5" type="submit">Submit comment</button>
+            </div>
+        </div>
+        <div class="field is-hidden-desktop">
             <div class="control">
                 <button class="button is-primary mr-5" type="submit">Submit comment</button>
             </div>
