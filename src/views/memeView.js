@@ -18,7 +18,7 @@ export const memeTemplate = (memePromise, commentsPromise) =>
 
 // Meme templates and logic
 
-export const memeCardTemplate = (meme, onDelete, onLike, onUnlike) =>
+export const memeCardTemplate = (meme, onDelete, onLike, onUnlike, onShare) =>
     html`<div class="column is-half">
         <section class="card meme-card">
             <header class="card-header">
@@ -42,27 +42,30 @@ export const memeCardTemplate = (meme, onDelete, onLike, onUnlike) =>
                 </div>
             </div>
             <footer ${ref(cardFooter)} class="card-footer">
-                ${memeFooterTemplate(meme, onDelete, onLike, onUnlike)}
+                ${memeFooterTemplate(meme, onDelete, onLike, onUnlike, onShare)}
             </footer>
         </section>
     </div>`;
 
-export const memeFooterTemplate = (meme, onDelete, onLike, onUnlike) =>
-    html` ${meme.isOwner
-        ? html`${cardFooterItemTemplate(
-              meme,
-              'Edit',
-              'warning',
-              'fa-solid fa-pen-to-square',
-              null,
-              `/edit-meme/${meme.id}`
-          )}
-          ${cardFooterItemTemplate(meme, 'Delete', 'danger', 'fa-solid fa-trash', onDelete)}`
-        : meme.isLogged
-        ? meme.isLiked
-            ? html`${cardFooterItemTemplate(meme, 'Unlike', 'danger', 'fa-solid fa-heart', onUnlike)}`
-            : html`${cardFooterItemTemplate(meme, 'Like', 'danger', 'fa-solid fa-heart', onLike)}`
-        : html`${cardFooterItemTemplate(meme, 'You have to be logged in to like memes.', 'link')}`}`;
+export const memeFooterTemplate = (meme, onDelete, onLike, onUnlike, onShare) =>
+    html`
+        ${meme.isOwner
+            ? html`${cardFooterItemTemplate(
+                  meme,
+                  'Edit',
+                  'warning',
+                  'fa-solid fa-pen-to-square',
+                  null,
+                  `/edit-meme/${meme.id}`
+              )}
+              ${cardFooterItemTemplate(meme, 'Delete', 'danger', 'fa-solid fa-trash', onDelete)}`
+            : meme.isLogged
+            ? html` ${meme.isLiked
+                  ? html`${cardFooterItemTemplate(meme, 'Unlike', 'danger', 'fa-solid fa-heart', onUnlike)}`
+                  : html`${cardFooterItemTemplate(meme, 'Like', 'danger', 'fa-solid fa-heart', onLike)}`}
+              ${cardFooterItemTemplate(meme, 'Share', 'info', 'fa-solid fa-link', onShare)}`
+            : nothing}
+    `;
 
 const cardFooterItemTemplate = (meme, text, color, icon, eventHandler = null, link = nothing) =>
     html`<a
@@ -91,12 +94,16 @@ export function updateMemeOnLike(memePromise, isLike) {
 
 // Comments templates and logic
 
-export const commentsTemplate = (comments, onSubmit, onDelete) =>
+export const commentsTemplate = (comments, isLogged, onSubmit, onDelete) =>
     html`<div class="column is-half">
         <section class="box">
             <h1 class="title is-size-3">Comments</h1>
             <div class="container comments mb-5" ${ref(commentsRef)}>${commentCardsTemplate(comments, onDelete)}</div>
-            <div class="container comments-form">${commentFormTemplate(onSubmit)}</div>
+            ${isLogged
+                ? html`<div class="container comments-form">${commentFormTemplate(onSubmit)}</div>`
+                : html`<div class="box">
+                      <p class="has-text-danger">You have to be logged in to like and comment memes.</p>
+                  </div>`}
         </section>
     </div>`;
 

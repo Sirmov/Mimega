@@ -2,15 +2,14 @@ import { deleteCommentAction } from '../actions/deleteCommentAction';
 import { deleteMemeAction } from '../actions/deleteMemeAction';
 import { likeMemeAction } from '../actions/likeMemeAction';
 import { unlikeMemeAction } from '../actions/unlikeMemeAction';
-import { getUserUid } from '../services/authenticationService';
+import { openModal } from '../components/modalComponent';
+import { getUserUid, isLogged } from '../services/authenticationService';
 import { createComment, readAllComments, readComment } from '../services/commentsService';
 import { readMeme } from '../services/memesService';
 import { createEventHandler, createSubmitHandler } from '../utils/decorators';
 import {
     reRenderComments,
-    commentCardsTemplate,
     commentsTemplate,
-    commentTemplate,
     memeCardTemplate,
     memeFooterTemplate,
     memeTemplate,
@@ -18,7 +17,7 @@ import {
 } from '../views/memeView';
 
 const allowedData = ['comment'];
-let onLikeDelete, onCommentDelete, onLike, onUnlike, onSubmit;
+let onLikeDelete, onCommentDelete, onLike, onUnlike, onSubmit, onShare;
 
 export function memeController(ctx, next) {
     onLikeDelete = createEventHandler(ctx, deleteMemeAction);
@@ -26,6 +25,7 @@ export function memeController(ctx, next) {
     onUnlike = createEventHandler(ctx, unlikeMemeAction);
     onSubmit = createSubmitHandler(ctx, onCommentSubmit, allowedData);
     onCommentDelete = createEventHandler(ctx, deleteCommentAction);
+    onShare = createEventHandler(ctx, shareClick);
 
     ctx.render(memeTemplate(renderMemeCard(ctx), renderComments(ctx)));
 }
@@ -34,17 +34,17 @@ export function memeController(ctx, next) {
 
 async function renderMemeCard(ctx) {
     let meme = await fetchMeme(ctx);
-    return memeCardTemplate(meme, onLikeDelete, onLike, onUnlike);
+    return memeCardTemplate(meme, onLikeDelete, onLike, onUnlike, onShare);
 }
 
 async function renderComments(ctx) {
     let comments = await fetchComments(ctx);
-    return commentsTemplate(comments, onSubmit, onCommentDelete);
+    return commentsTemplate(comments, isLogged(ctx.auth), onSubmit, onCommentDelete);
 }
 
 export async function renderMemeFooter(ctx) {
     let meme = await fetchMeme(ctx);
-    return memeFooterTemplate(meme, onLikeDelete, onLike, onUnlike);
+    return memeFooterTemplate(meme, onLikeDelete, onLike, onUnlike, onShare);
 }
 
 // Comment submit event handler
@@ -100,4 +100,12 @@ async function fetchComments(ctx) {
     let comments = await readAllComments(ctx.db, ctx.params.id);
     comments.forEach((c) => (c.isOwner = c.ownerId === userUid));
     return comments;
+}
+
+// Share event handler
+
+function shareClick(ctx, event) {
+    const memeId = event.currentTarget.dataset.id;
+    navigator.clipboard.writeText(`https://mimega-b819a.web.app/${memeId}`);
+    openModal('Successes!', 'Successfully copied meme link!');
 }
