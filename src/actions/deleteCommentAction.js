@@ -6,6 +6,6 @@ export async function deleteCommentAction(ctx, event) {
 
     if (choice) {
         await deleteComment(ctx.db, currentTarget.dataset.id);
-        currentTarget.parentElement.parentElement.parentElement.remove();
+        currentTarget.parentElement.parentElement.parentElement.parentElement.remove();
     }
 }

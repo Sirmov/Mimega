@@ -64,8 +64,13 @@ export const memeFooterTemplate = (meme, onDelete, onLike, onUnlike) =>
             : html`${cardFooterItemTemplate(meme, 'Like', 'danger', 'fa-solid fa-heart', onLike)}`
         : html`${cardFooterItemTemplate(meme, 'You have to be logged in to like memes.', 'link')}`}`;
 
-const cardFooterItemTemplate = (meme, text, color, icon, eventHandler = null) =>
-    html`<a class="card-footer-item has-background-${color} has-text-light" data-id=${meme.id} @click=${eventHandler}>
+const cardFooterItemTemplate = (meme, text, color, icon, eventHandler = null, link = nothing) =>
+    html`<a
+        class="card-footer-item has-background-${color} has-text-light"
+        href=${link}
+        data-id=${meme.id}
+        @click=${eventHandler}
+    >
         <span class="icon">
             <i class=${icon} style="color: #ffffff"></i>
         </span>
@@ -128,30 +133,24 @@ export const commentFormTemplate = (onSubmit) =>
 
 const commentTemplate = (comment, onDelete) =>
     html`<div class="box">
-        <div class="content">
-            <p><strong>${comment.author}</strong></p>
-            <p>${comment.comment}</p>
-        </div>
-        <nav class="level is-mobile">
-            ${comment.isOwner
-                ? html`<div class="level-left">
-                      <a class="level-item" href="edit-comment/${comment.id}">
-                          <span class="icon is-small">
-                              <i class="fas fa-pen-to-square"></i>
-                          </span>
-                      </a>
-                      <a class="level-item" @click=${onDelete} data-id=${comment.id}>
-                          <span class="icon is-small">
-                              <i class="fas fa-xmark"></i>
-                          </span>
-                      </a>
-                  </div>`
-                : html``}
-
-            <div class="level-right">
-                <p>Last updated: ${getDate(comment.updatedAt)}</p>
+        <div class="level is-mobile mb-1">
+            <div class="level-left">
+                <p><strong>${comment.author}</strong></p>
             </div>
-        </nav>
+            <div class="level-right ">
+                ${comment.isOwner
+                    ? html`<div class="level-left">
+                          <a class="level-item" @click=${onDelete} data-id=${comment.id}>
+                              <span class="icon is-small">
+                                  <i class="fas fa-xmark"></i>
+                              </span>
+                          </a>
+                      </div>`
+                    : html``}
+            </div>
+        </div>
+        <p class="mb-1">${comment.comment}</p>
+        <p>Posted: ${getDate(comment.updatedAt)}</p>
     </div>`;
 
 export function reRenderComments(comments, onDelete) {
