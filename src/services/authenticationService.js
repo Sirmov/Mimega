@@ -85,8 +85,8 @@ export function emailVerified(auth) {
 }
 
 // Is logged in
-export function isLogged() {
-    const user = getUser();
+export function isLogged(auth) {
+    const user = getUser(auth);
 
     return Boolean(user);
 }
