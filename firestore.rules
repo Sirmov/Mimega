@@ -108,13 +108,7 @@ service cloud.firestore {
       isValidComment(incomingData()) &&
       checkKeys(incomingData(), ['comment', 'author', 'createdAt', 'memeId', 'ownerId', 'updatedAt'], []);
 
-      allow update: if
-      isLoggedIn() &&
-      isCalm() &&
-      isOwner(incomingData().ownerId) &&
-      isOwner(existingData().ownerId) &&
-      isValidComment(incomingData()) &&
-      checkKeys(incomingData(), ['comment', 'author', 'createdAt', 'memeId', 'ownerId', 'updatedAt'], []);
+      allow update: if false
 
       allow delete: if
       isLoggedIn() &&
