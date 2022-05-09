@@ -108,7 +108,7 @@ export const commentsTemplate = (comments, isLogged, onSubmit, onDelete) =>
             <div class="container comments mb-5" ${ref(commentsRef)}>${commentCardsTemplate(comments, onDelete)}</div>
             ${isLogged
                 ? html`<div class="container comments-form">${commentFormTemplate(onSubmit)}</div>`
-                : html`<div class="box">
+                : html`<div class="box has-background-danger-light">
                       <p class="has-text-danger">You have to be logged in to like and comment memes.</p>
                   </div>`}
         </section>
