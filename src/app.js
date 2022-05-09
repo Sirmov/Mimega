@@ -47,9 +47,9 @@ page('/login', loginController);
 page('/sign-up', registerController);
 page('/memes', memesController);
 page('/memes/:id', memeController);
-page('/:id', memeController);
 page('/create-meme', uploadMemeController);
 page('/edit-meme/:id', editMemeController);
 page('/terms-and-conditions', termsAndConditionsController);
+page('/:id', memeController);
 
 page.start();
