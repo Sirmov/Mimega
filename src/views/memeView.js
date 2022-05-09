@@ -58,8 +58,8 @@ export const memeFooterTemplate = (meme, onDelete, onLike, onUnlike, onShare) =>
               ${cardFooterItemTemplate(meme, 'Delete', 'danger', 'fa-solid fa-trash', onDelete)}`
             : meme.isLogged
             ? html` ${meme.isLiked
-                  ? html`${cardFooterItemTemplate(meme, 'Unlike', 'danger', 'fa-solid fa-heart', onUnlike)}`
-                  : html`${cardFooterItemTemplate(meme, 'Like', 'danger', 'fa-solid fa-heart', onLike)}`}
+                  ? cardFooterItemTemplate(meme, 'Unlike', 'danger', 'fa-solid fa-heart', onUnlike)
+                  : cardFooterItemTemplate(meme, 'Like', 'danger', 'fa-solid fa-heart', onLike)}
               ${cardFooterItemTemplate(meme, 'Share', 'info', 'fa-solid fa-link', onShare)}`
             : nothing}
     `;
@@ -86,7 +86,18 @@ export function updateMemeOnLike(memePromise, isLike) {
         likesRef.value.textContent = --likes;
     }
 
-    render(html`${until(memePromise, cardFooterItemTemplate({}, '', 'danger'))}`, cardFooter.value);
+    render(
+        html`${until(
+            memePromise,
+            html`${cardFooterItemTemplate({}, '', 'danger')}${cardFooterItemTemplate(
+                {},
+                'Share',
+                'info',
+                'fa-solid fa-link'
+            )}`
+        )}`,
+        cardFooter.value
+    );
 }
 
 // Comments templates and logic
