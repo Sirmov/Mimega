@@ -167,8 +167,17 @@ const commentTemplate = (comment, onDelete) =>
         <p>Posted: ${getDate(comment.updatedAt)}</p>
     </div>`;
 
+// Dirty solution for unpredictable lit html rendering
+// TODO: Use reactive javascript framework 
+let deleteFlag = false;
 export function reRenderComments(comments, onDelete) {
+    const commentsChildren = [...commentsRef.value.children];
     render(commentCardsTemplate(comments, onDelete), commentsRef.value);
+
+    if (!deleteFlag) {
+        commentsChildren.forEach((e) => e.remove());
+        deleteFlag = true;
+    }
 }
 
 export function reRenderCommentFormMessage(message) {
