@@ -5,6 +5,9 @@ import { appendMemes, memeCardsTemplate, memesGridTemplate, memesTemplate } from
 // Declare event handlers in outer scope
 let onScroll;
 
+// Declare memes storage
+let memesStorage = [];
+
 const htmlElement = document.documentElement;
 const thresholdOffset = 250;
 
@@ -17,35 +20,41 @@ export function memesController(ctx, next) {
         htmlElement.setAttribute('scrollListener', 'true');
     }
 
+    // Clear memes storage
+    memesStorage = [];
+
     ctx.render(memesTemplate(renderMemes(ctx)));
 }
 
 // Rendering functions
 async function renderMemes(ctx) {
-    let memes = await fetchMemes(ctx, true);
-    return memesGridTemplate(memes);
+    await fetchMemes(ctx, true);
+    return memesGridTemplate(memesStorage);
 }
 
 async function fetchMemes(ctx, isFirstPage = false) {
-    let memes = await readMemesPage(ctx.db, isFirstPage);
+    let isNotEmpty = false;
+
+    const userUid = getUserUid(ctx.auth);
+    let memes = await readMemesPage(ctx.db, userUid, isFirstPage);
 
     // Remove event listener if there are no memes left
     if (memes === false) {
         window.removeEventListener('scroll', onScroll);
         htmlElement.setAttribute('scrollListener', 'false');
 
-        return false;
+        return isNotEmpty;
     }
 
-    // Attach a is owner and is liked property to all memes
-    const userUid = getUserUid(ctx.auth);
+    isNotEmpty = true;
+
     memes.forEach((meme) => {
-        meme.isOwner = userUid === meme.ownerId;
-        // This can cause performance issues when likes become bigger
-        // The solution is to keep user liked memes and compare it to the current meme id
-        meme.isLiked = meme.whoLiked.some((x) => x === userUid);
+        if (!memesStorage.some((m) => m.id === meme.id)) {
+            memesStorage.push(meme);
+        }
     });
-    return memes;
+
+    return isNotEmpty;
 }
 
 // Scroll handler
@@ -53,10 +62,10 @@ const createScrollHandler = (ctx) =>
     async function () {
         // Check wether scroll position exceeds threshold
         if (window.innerHeight + window.scrollY >= document.body.offsetHeight - thresholdOffset) {
-            let memes = await fetchMemes(ctx);
+            let isNotEmpty = await fetchMemes(ctx);
 
-            if (memes !== false) {
-                appendMemes(memeCardsTemplate(memes));
+            if (isNotEmpty) {
+                appendMemes(memesStorage);
             }
         }
     };
