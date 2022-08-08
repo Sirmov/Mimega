@@ -21,10 +21,10 @@ const contentContainer = rootElement.querySelector('main');
 const footerContainer = rootElement.querySelector('footer');
 
 function ctxRender(ctx) {
-    return function (templateResult) {
+    return async function (templateResult) {
         render(navigationTemplate(getUserDisplayName(ctx.auth), createEventHandler(ctx, logoutAction)), navigationContainer);
         render(footerTemplate(), footerContainer);
-        return render(templateResult, contentContainer);
+        return await render(templateResult, contentContainer);
     };
 }
 
