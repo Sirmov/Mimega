@@ -9,10 +9,8 @@ const memesContainer = createRef();
 
 export const memesTemplate = (memesPromise) => html`${until(memesPromise, spinner())}`;
 
-export const memesGridTemplate = (memes) =>
-    html`<div class="columns is-vcentered is-multiline is-variable is-6" ${ref(memesContainer)}>
-        ${memeCardsTemplate(memes)}
-    </div>`;
+export const memesContainerTemplate = () =>
+    html`<div id="meme-container" class="columns is-vcentered is-multiline is-variable is-6" ${ref(memesContainer)}></div>`;
 
 export const memeCardsTemplate = (memes) =>
     html`${memes.length > 0

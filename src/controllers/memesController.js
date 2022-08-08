@@ -1,6 +1,7 @@
 import { getUserUid } from '../services/authenticationService';
 import { readMemesPage } from '../services/memesService';
-import { appendMemes, memeCardsTemplate, memesGridTemplate, memesTemplate } from '../views/memesView';
+import { isRendered } from '../utils/dom';
+import { appendMemes, memesContainerTemplate, memesTemplate } from '../views/memesView';
 
 // Declare event handlers in outer scope
 let onScroll;
@@ -11,7 +12,7 @@ let memesStorage = [];
 const htmlElement = document.documentElement;
 const thresholdOffset = 250;
 
-export function memesController(ctx, next) {
+export async function memesController(ctx, next) {
     // Attach scroll event handler only once
     if (htmlElement.getAttribute('scrollListener') !== 'true') {
         onScroll = createScrollHandler(ctx);
@@ -24,12 +25,13 @@ export function memesController(ctx, next) {
     memesStorage = [];
 
     ctx.render(memesTemplate(renderMemes(ctx)));
+    isRendered('#meme-container', () => appendMemes(memesStorage));
 }
 
 // Rendering functions
 async function renderMemes(ctx) {
     await fetchMemes(ctx, true);
-    return memesGridTemplate(memesStorage);
+    return memesContainerTemplate();
 }
 
 async function fetchMemes(ctx, isFirstPage = false) {
