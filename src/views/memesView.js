@@ -9,19 +9,18 @@ const memesContainer = createRef();
 
 export const memesTemplate = (memesPromise) => html`${until(memesPromise, spinner())}`;
 
-export const memesGridTemplate = (memes, onDelete, onLike, onUnlike) =>
+export const memesGridTemplate = (memes) =>
     html`<div class="columns is-vcentered is-multiline is-variable is-6" ${ref(memesContainer)}>
-        ${memeCardsTemplate(memes, onDelete, onLike, onUnlike)}
+        ${memeCardsTemplate(memes)}
     </div>`;
 
-export const memeCardsTemplate = (memes, onDelete, onLike, onUnlike) =>
+export const memeCardsTemplate = (memes) =>
     html`${memes.length > 0
         ? html`${repeat(
               memes,
               (meme) => meme.id,
-              (meme, index) => memeCardTemplate(meme, onDelete, onLike, onUnlike)
-          )}
-</div>`
+              (meme, index) => memeCardTemplate(meme)
+          )}`
         : html`<h1>No memes sorry :(</h1>`}`;
 
 const memeCardTemplate = (meme) =>
@@ -53,5 +52,5 @@ const memeCardTemplate = (meme) =>
     </div>`;
 
 export function appendMemes(memes) {
-    render(memes, memesContainer.value);
+    render(memeCardsTemplate(memes), memesContainer.value);
 }
