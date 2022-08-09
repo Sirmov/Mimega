@@ -9,6 +9,7 @@ let onScroll;
 // Declare memes storage
 let memesStorage = [];
 
+// Declare constants
 const htmlElement = document.documentElement;
 const thresholdOffset = 250;
 
@@ -24,39 +25,37 @@ export async function memesController(ctx, next) {
     // Clear memes storage
     memesStorage = [];
 
+    // Fetch meme page, render meme container and append memes
     ctx.render(memesTemplate(renderMemes(ctx)));
     isRendered('#meme-container', () => appendMemes(memesStorage));
 }
 
 // Rendering functions
 async function renderMemes(ctx) {
-    await fetchMemes(ctx, true);
+    await fetchMemePage(ctx, true);
     return memesContainerTemplate();
 }
 
-async function fetchMemes(ctx, isFirstPage = false) {
-    let isNotEmpty = false;
+async function fetchMemePage(ctx, isFirstPage = false) {
+    // Fetch memes
+    let memes = await readMemesPage(ctx.db, getUserUid(ctx.auth), isFirstPage);
 
-    const userUid = getUserUid(ctx.auth);
-    let memes = await readMemesPage(ctx.db, userUid, isFirstPage);
+    if (memes) {
+        // Add distinct memes to storage
+        memes.forEach((meme) => {
+            if (!memesStorage.some((m) => m.id === meme.id)) {
+                memesStorage.push(meme);
+            }
+        });
 
-    // Remove event listener if there are no memes left
-    if (memes === false) {
+        return true;
+    } else {
+        // Remove event listener if there are no memes left
         window.removeEventListener('scroll', onScroll);
         htmlElement.setAttribute('scrollListener', 'false');
 
-        return isNotEmpty;
+        return false;
     }
-
-    isNotEmpty = true;
-
-    memes.forEach((meme) => {
-        if (!memesStorage.some((m) => m.id === meme.id)) {
-            memesStorage.push(meme);
-        }
-    });
-
-    return isNotEmpty;
 }
 
 // Scroll handler
@@ -64,7 +63,7 @@ const createScrollHandler = (ctx) =>
     async function () {
         // Check wether scroll position exceeds threshold
         if (window.innerHeight + window.scrollY >= document.body.offsetHeight - thresholdOffset) {
-            let isNotEmpty = await fetchMemes(ctx);
+            let isNotEmpty = await fetchMemePage(ctx);
 
             if (isNotEmpty) {
                 appendMemes(memesStorage);
