@@ -37,9 +37,17 @@ let observerContainer;
 const observerConfig = { attributes: false, childList: true, characterData: false, subtree: true };
 
 export function isRendered(elementSelector, afterRenderCallback) {
-    observerContainer = updateSelector(observerContainer, 'main');
-    let observer = new MutationObserver(observerCallback(elementSelector, afterRenderCallback));
-    observer.observe(observerContainer, observerConfig);
+    if (document.querySelector(elementSelector)) {
+        return true;
+    } else {
+        if (afterRenderCallback) {
+            observerContainer = updateSelector(observerContainer, 'main');
+            let observer = new MutationObserver(observerCallback(elementSelector, afterRenderCallback));
+            observer.observe(observerContainer, observerConfig);
+        }
+
+        return false;
+    }
 }
 
 function observerCallback(elementSelector, afterRenderCallback) {
