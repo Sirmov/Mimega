@@ -50,7 +50,7 @@ export async function createMeme(db, auth, meme) {
     }
 }
 
-export async function readMemesPage(db, userUid, isFirstPage) {
+export async function readMemesPage(db, userUid, isFirstPage = false) {
     try {
         let query = isFirstPage ? queries.recentFirstPage(db) : queries.recentPage(db, lastDocument);
         const snapshot = await getDocs(query);
