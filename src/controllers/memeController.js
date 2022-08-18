@@ -104,6 +104,6 @@ async function fetchComments(ctx) {
 // Share event handler
 function shareClick(ctx, event) {
     const memeId = event.currentTarget.dataset.id;
-    navigator.clipboard.writeText(`https://mimega-b819a.web.app/${memeId}`);
+    navigator.clipboard.writeText(`https://mimega-b819a.web.app/memes/${memeId}`);
     openModal('Successes!', 'Successfully copied meme link!');
 }
