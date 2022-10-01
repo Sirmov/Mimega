@@ -104,11 +104,19 @@ export async function readCommentsPage(db, memeId, isNext) {
     }
 }
 
-export async function readAllComments(db, memeId) {
+export async function readAllComments(db, memeId, userUid) {
     try {
         const snapshot = await getDocs(queries.recent(db, memeId));
+
         return snapshot.docs.map((doc) => {
-            return { ...doc.data(), id: doc.id };
+            let comment = doc.data();
+
+            return {
+                ...comment,
+                id: doc.id,
+                // Attach a is owner property to all comments
+                isOwner: userUid === comment.ownerId
+            };
         });
     } catch (error) {
         handleError('Request', error);

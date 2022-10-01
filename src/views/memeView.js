@@ -7,7 +7,7 @@ import { getDate, spinner } from '../utils/dom';
 // Element references
 const cardFooter = createRef();
 const likesRef = createRef();
-const commentsRef = createRef();
+const commentsContainer = createRef();
 const commentFormMessageRef = createRef();
 
 // Main view template
@@ -101,11 +101,11 @@ export function updateMemeOnLike(memePromise, isLike) {
 }
 
 // Comments templates and logic
-export const commentsTemplate = (comments, isLogged, onSubmit, onDelete) =>
+export const commentsTemplate = (isLogged, onSubmit) =>
     html`<div class="column is-half">
         <section class="box">
             <h1 class="title is-size-3">Comments</h1>
-            <div class="container comments mb-5" ${ref(commentsRef)}>${commentCardsTemplate(comments, onDelete)}</div>
+            <div id="comments-container" class="container comments mb-5" ${ref(commentsContainer)}></div>
             ${isLogged
                 ? html`<div class="container comments-form">${commentFormTemplate(onSubmit)}</div>`
                 : html`<div class="box has-background-danger-light">
@@ -142,7 +142,7 @@ export const commentFormTemplate = (onSubmit) =>
                 <button class="button is-primary mr-5" type="submit">Submit comment</button>
             </div>
         </div>
-        <p class="help" ${ref(commentFormMessageRef)}></p>
+        <p class="help is-danger" ${ref(commentFormMessageRef)}></p>
     </form>`;
 
 const commentTemplate = (comment, onDelete) =>
@@ -168,10 +168,9 @@ const commentTemplate = (comment, onDelete) =>
     </div>`;
 
 export function reRenderComments(comments, onDelete) {
-    render(commentCardsTemplate(comments, onDelete), commentsRef.value);
+    render(commentCardsTemplate(comments, onDelete), commentsContainer.value);
 }
 
-export function reRenderCommentFormMessage(message) {
-    commentFormMessageRef.value.classList.add('is-danger');
+export function updateCommentFormMessage(message) {
     commentFormMessageRef.value.textContent = message;
 }

@@ -50,7 +50,7 @@ export async function createMeme(db, auth, meme) {
     }
 }
 
-export async function readMemesPage(db, isFirstPage) {
+export async function readMemesPage(db, userUid, isFirstPage = false) {
     try {
         let query = isFirstPage ? queries.recentFirstPage(db) : queries.recentPage(db, lastDocument);
         const snapshot = await getDocs(query);
@@ -64,7 +64,17 @@ export async function readMemesPage(db, isFirstPage) {
         lastDocument = snapshot.docs[snapshot.docs.length - 1];
 
         return snapshot.docs.map((doc) => {
-            return { ...doc.data(), id: doc.id };
+            let meme = doc.data();
+
+            return {
+                ...meme,
+                id: doc.id,
+                // Attach a is owner and is liked property to all memes
+                isOwner: userUid === meme.ownerId,
+                // This can cause performance issues when likes become bigger
+                // The solution is to keep user liked memes and compare it to the current meme id
+                isLiked: meme.whoLiked.some((x) => x === userUid)
+            };
         });
     } catch (error) {
         handleError('Request', error);

@@ -18,6 +18,7 @@ module.exports = merge(common, {
         new HtmlWebpackPlugin({
             template: './public/index.html',
             favicon: './public/favicon.png',
+            publicPath: '/',
             minify: true
         }),
         new CleanWebpackPlugin()

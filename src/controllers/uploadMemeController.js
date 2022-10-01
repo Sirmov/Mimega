@@ -21,6 +21,9 @@ async function uploadSubmit(ctx, data, event) {
     if (data.title.length < 5) {
         validation.title.isValid = false;
         validation.title.message = 'Title should be at least 5 characters long.';
+    } else if (data.title.length > 50) {
+        validation.title.isValid = false;
+        validation.title.message = 'Title should not be more than 50 characters long.';
     } else {
         validation.title.isValid = true;
         validation.title.message = 'Title is available.';
