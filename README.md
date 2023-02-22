@@ -2,7 +2,7 @@
 <h3 align="center">The social media for creating and sharing memes</h3>
 
 ## 📒 Description
-[Mimega](https://mimega-b819a.web.app) is a project I decided to make after finishing the [JS Applications](https://softuni.bg/certificates/details/130450/12e1b118) course at [Softuni](https://softuni.bg). It is a single page front end application about creating and sharing memes with your friends. The project is simple and its main purpose is to consolidate the skills acquired in the course. Some of which are: BOM, DOM manipulations, asynchronous programming, HTTP request, working with backend server, remote data, authentication, front end routing, templating, client side rendering, clean code practises, architecture and many more.
+[Mimega](https://mimega-b819a.web.app) is a project I decided to make after finishing the [JS Applications](https://softuni.bg/certificates/details/130450/12e1b118) course at [Softuni](https://softuni.bg). It is a single page front end application about creating and sharing memes with your friends. The project is simple and its main purpose is to consolidate the skills acquired in the course. Some of which are: BOM, DOM manipulations, asynchronous programming, HTTP request, working with backend server, remote data, authentication, front end routing, templating, client side rendering, clean code practices, architecture and many more.
 
 ## 🌐Technologies
   
